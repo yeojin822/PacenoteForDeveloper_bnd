@@ -1,3 +1,12 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
 spring:
   profiles:
     include: oauth2
@@ -23,10 +32,4 @@ spring:
         format_sql: true
 
 
-app:
-  auth:
-    token-secret: devbeekei-token-secret-key
-    token-expiration-time: 1209600000
-  oauth2:
-    authorized-redirect-uris:
-      - http://localhost:8080/auth/token
+
