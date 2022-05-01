@@ -3,11 +3,13 @@ package com.example.portfoliopagebuilder_bnd.oauth.dto.provider;
 import java.util.Map;
 
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Slf4j
 public class OAuthAttributes {
 	private String provider;
 	private String providerId;
@@ -26,16 +28,16 @@ public class OAuthAttributes {
 
 	public static OAuthAttributes of(String provider, Map<String, Object> attributes){
 		if("google".equals(provider)){
-			System.out.println("구글 로그인 요청");
+			log.info("구글 로그인 요청");
 			return createUser(new GoogleUserInfo(attributes));
 		} else if("facebook".equals(provider)){
-			System.out.println("페이스북 로그인 요청");
+			log.info("페이스북 로그인 요청");
 			return createUser(new FacebookUserInfo(attributes));
 		}else if("naver".equals(provider)){
-			System.out.println("네이버 로그인 요청");
+			log.info("네이버 로그인 요청");
 			return createUser(new NaverUserInfo((Map)attributes.get("response")));
 		}else if("kakao".equals(provider)){
-			System.out.println("카카오 로그인 요청");
+			log.info("카카오 로그인 요청");
 			return createUser(new KakaoUserInfo(attributes));
 		}
 

@@ -3,6 +3,7 @@ package com.example.portfoliopagebuilder_bnd.oauth.service;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 // 해당 빈에 들어있는 loadUserByUsername를 동작시킴 > UserDetails 객체 반환
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PrincipalDetailsService implements UserDetailsService {
 	private final UserRepository userRepository;
 
@@ -24,10 +26,10 @@ public class PrincipalDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username).orElseGet(null);
-		System.out.println("user :" + user);
+		log.info("user :" + user);
 		if(user != null){
 			PrincipalDetails principalDetails = new PrincipalDetails(user);
-			System.out.println("principalDetails = " + principalDetails);
+			log.info("principalDetails = " + principalDetails);
 			return principalDetails;
 		}
 		return null;

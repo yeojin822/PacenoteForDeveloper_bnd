@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 public class MySQLConnectionTest {
 
     // MySQL Connector 의 클래스. DB 연결 드라이버 정의
