@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.oauth.config.auth;
+package com.example.portfoliopagebuilder_bnd.oauth.dto;
 
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import lombok.Getter;

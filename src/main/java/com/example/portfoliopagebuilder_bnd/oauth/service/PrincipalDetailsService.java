@@ -1,5 +1,6 @@
-package com.example.portfoliopagebuilder_bnd.oauth.config.auth;
+package com.example.portfoliopagebuilder_bnd.oauth.service;
 
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

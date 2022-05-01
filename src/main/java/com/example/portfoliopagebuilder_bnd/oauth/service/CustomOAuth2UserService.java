@@ -1,7 +1,7 @@
-package com.example.portfoliopagebuilder_bnd.oauth.config.oauth;
+package com.example.portfoliopagebuilder_bnd.oauth.service;
 
-import com.example.portfoliopagebuilder_bnd.oauth.config.auth.PrincipalDetails;
-import com.example.portfoliopagebuilder_bnd.oauth.config.oauth.provider.OAuthAttributes;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.OAuthAttributes;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,12 @@
 package com.example.portfoliopagebuilder_bnd.oauth.controller;
 
-import com.example.portfoliopagebuilder_bnd.oauth.config.auth.PrincipalDetails;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;

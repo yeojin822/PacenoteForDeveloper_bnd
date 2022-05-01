@@ -1,6 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.oauth.config;
 
-import com.example.portfoliopagebuilder_bnd.oauth.config.oauth.CustomOAuth2UserService;
+import com.example.portfoliopagebuilder_bnd.oauth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

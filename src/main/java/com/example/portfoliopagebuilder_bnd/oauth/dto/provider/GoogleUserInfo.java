@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.oauth.config.oauth.provider;
+package com.example.portfoliopagebuilder_bnd.oauth.dto.provider;
 
 import java.util.Map;
 
