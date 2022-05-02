@@ -20,17 +20,10 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class IndexController {
+public class AuthController {
 
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-   // ::Todo health Check
-	@GetMapping({"","/"})
-	public @ResponseBody String index(){
-		log.info("test ");
-		return "Test";
-	}
 
 	// 시큐리티 세션에 있는 Authentication 객체 안에 UserDetails, OAuth2User 객체를 저장할 수 있음
 	// UserDetails: 기존 로그인 유저 객체
