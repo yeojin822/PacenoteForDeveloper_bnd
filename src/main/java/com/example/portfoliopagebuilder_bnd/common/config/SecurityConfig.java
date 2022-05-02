@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.oauth.config;
+package com.example.portfoliopagebuilder_bnd.common.config;
 
 import com.example.portfoliopagebuilder_bnd.oauth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;

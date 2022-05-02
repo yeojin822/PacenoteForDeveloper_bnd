@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.common.aop;
+package com.example.portfoliopagebuilder_bnd.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,7 +9,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@ConfigurationProperties
 @Service
 @Slf4j
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
@@ -19,6 +18,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("프리 핸들러 작동중");
         log.info("preHandle : : : {}", request.getRequestURI());
         return super.preHandle(request, response, handler);
     }
