@@ -25,6 +25,7 @@ public class AuthController {
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
 	// 시큐리티 세션에 있는 Authentication 객체 안에 UserDetails, OAuth2User 객체를 저장할 수 있음
 	// UserDetails: 기존 로그인 유저 객체
 	// OAuth2User: OAuth 로그인 유저 객체
