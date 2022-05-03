@@ -1,6 +1,9 @@
 package com.example.portfoliopagebuilder_bnd.common.config;
 
+import com.example.portfoliopagebuilder_bnd.oauth.handler.OAuth2SuccessHandler;
 import com.example.portfoliopagebuilder_bnd.oauth.service.CustomOAuth2UserService;
+import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,8 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import lombok.RequiredArgsConstructor;
 
 // oauth2 과정
 // 1.코드받기(인증), 2.액세스토큰(권한),
@@ -23,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final CustomOAuth2UserService customOAuth2UserService;
+	private final CustomOAuth2UserService oAuth2UserService;
+	private final OAuth2SuccessHandler successHandler;
+	private final TokenService tokenService;
 
 	@Bean
 	public BCryptPasswordEncoder encodePassword(){
@@ -34,19 +37,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeRequests()
-			.antMatchers("/user/**").authenticated()
-			.antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
-			.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-			.anyRequest().permitAll()
-			.and()
+				.antMatchers("/user/**").authenticated()
+				.anyRequest().permitAll()
+				.and()
 				.formLogin()
-					.loginPage("/loginForm")
-					.loginProcessingUrl("/login") //login주소가 호출되면 security에서 낚아채서 대신 로그인 진행
-					.defaultSuccessUrl("/")
-			.and()
+				.loginPage("/loginForm")
+				.loginProcessingUrl("/login") //login주소가 호출되면 security에서 낚아채서 대신 로그인 진행
+				.and()
 				.oauth2Login()
-					.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
-						.userService(customOAuth2UserService);
-
+				.successHandler(successHandler)
+				.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
+				.userService(oAuth2UserService);
 	}
 }

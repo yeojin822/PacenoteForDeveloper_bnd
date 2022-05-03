@@ -1,7 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,6 +19,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("프리 핸들러 작동중");
         log.info("preHandle : : : {}", request.getRequestURI());
+
+
         return super.preHandle(request, response, handler);
     }
 
@@ -37,4 +38,5 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         super.afterConcurrentHandlingStarted(request, response, handler);
     }
+
 }
