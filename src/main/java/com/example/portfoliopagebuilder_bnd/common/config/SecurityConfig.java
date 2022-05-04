@@ -1,6 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.common.config;
 
+import com.example.portfoliopagebuilder_bnd.oauth.handler.OAuth2SuccessHandler;
 import com.example.portfoliopagebuilder_bnd.oauth.service.CustomOAuth2UserService;
+import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CustomOAuth2UserService oAuth2UserService;
+	private final OAuth2SuccessHandler successHandler;
 
 	@Bean
 	public BCryptPasswordEncoder encodePassword(){
@@ -32,17 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.authorizeRequests()
-				.antMatchers("/user/**").authenticated()
-				.anyRequest().permitAll()
-				.and()
-				.formLogin()
-				.loginPage("/loginForm")
-				.loginProcessingUrl("/login") //login주소가 호출되면 security에서 낚아채서 대신 로그인 진행
-				.and()
-				.oauth2Login()
-				.defaultSuccessUrl("/api/v1/auth/token")
-				.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
-				.userService(oAuth2UserService);
+		http.formLogin()
+			.loginPage("/loginForm")
+			.loginProcessingUrl("/login") //login주소가 호출되면 security에서 낚아채서 대신 로그인 진행
+			.and()
+			.oauth2Login()
+			.successHandler(successHandler)
+			.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
+			.userService(oAuth2UserService);
 	}
 }

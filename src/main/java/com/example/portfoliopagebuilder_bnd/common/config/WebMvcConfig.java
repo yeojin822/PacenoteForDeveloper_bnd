@@ -18,8 +18,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(interceptor)
-				.addPathPatterns("/")
+				.addPathPatterns("/**")
 				.excludePathPatterns(
+						"",
+						"/",
 						"/login", // 로그인
 						"/swagger-ui.html**", //swagger
 						"/webjars/**",
