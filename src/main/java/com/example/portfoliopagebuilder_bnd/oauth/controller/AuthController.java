@@ -1,8 +1,10 @@
 package com.example.portfoliopagebuilder_bnd.oauth.controller;
 
 import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
+import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
@@ -25,6 +27,7 @@ public class AuthController {
 
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final TokenService tokenService;
 
 
 	// 시큐리티 세션에 있는 Authentication 객체 안에 UserDetails, OAuth2User 객체를 저장할 수 있음
@@ -33,12 +36,11 @@ public class AuthController {
 	// 그래서 PrincipalDetails에 UserDetails, OAuth2User 모두 구현해야 함
 
 	// Authentication 객체 안에 인증된 유저 정보 가져오기
-	@GetMapping("/login")
-	public String testLogin(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails){
+	@GetMapping("/token")
+	public String testLogin(@AuthenticationPrincipal PrincipalDetails userDetails){
 		log.info("==== /login =====");
-		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-		log.info("authentication : " + principalDetails.getUser());
-		log.info("userDetails : " + userDetails.getUser());
+		Token token = tokenService.generateToken(userDetails.getUser().getEmail(), "USER");
+        log.info("로그인 성공 ! 정보가져와서 토근 만들기 : : : {}", token);
 
 		return "세션 정보 확인하기";
 	}

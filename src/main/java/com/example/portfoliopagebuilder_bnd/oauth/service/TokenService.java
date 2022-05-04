@@ -1,19 +1,26 @@
 package com.example.portfoliopagebuilder_bnd.oauth.service;
 
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 
 @Service
 public class TokenService {
     private String secretKey = "token-secret-key";
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @PostConstruct
     protected void init() {
@@ -58,5 +65,17 @@ public class TokenService {
 
     public String getUid(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    private void writeTokenResponse(HttpServletResponse response, Token token) throws IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        response.addHeader("Auth", token.getToken());
+        response.addHeader("Refresh", token.getRefreshToken());
+        response.setContentType("application/json;charset=UTF-8");
+
+        var writer = response.getWriter();
+        writer.println(objectMapper.writeValueAsString(token));
+        writer.flush();
     }
 }
