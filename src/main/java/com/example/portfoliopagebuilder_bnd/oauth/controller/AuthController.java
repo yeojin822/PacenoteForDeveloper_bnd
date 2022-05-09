@@ -1,25 +1,13 @@
 package com.example.portfoliopagebuilder_bnd.oauth.controller;
 
-import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
-import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
-import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
-import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import io.swagger.annotations.Api;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import lombok.RequiredArgsConstructor;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +18,6 @@ public class AuthController {
 
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	private final TokenService tokenService;
 
 
 	// 시큐리티 세션에 있는 Authentication 객체 안에 UserDetails, OAuth2User 객체를 저장할 수 있음

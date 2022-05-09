@@ -1,11 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.aop;
 
-import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import com.example.portfoliopagebuilder_bnd.common.util.AuthorizationExtractor;
+import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -16,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 @Slf4j
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
-    @Autowired
-    private TokenService tokenService;
 
-    public SecurityInterceptor() {
-        super();
+    private JwtTokenProvider jwtTokenProvider;
+    private AuthorizationExtractor authorizationExtractor;
+
+    public SecurityInterceptor(AuthorizationExtractor authorizationExtractor, JwtTokenProvider jwtTokenProvider) {
+        this.authorizationExtractor = authorizationExtractor;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         log.info("호출 1 ::: {}", request.getRequestURI());
         log.info("호출 2 ::: {}", request.getRequestURL());
 
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authorizationExtractor.extract(request, "Bearer");
 
         if(request.getMethod().equals("OPTIONS")) { // preflight로 넘어온 options는 통과
             return true;
@@ -36,9 +35,12 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         else {
             if(token != null && token.length() > 0) {
                 log.info("==== token check ====");
-                log.info("==== token check  ::: {}",  tokenService.verifyToken(token));
-               return tokenService.verifyToken(token); // 토큰 유효성 검증
-
+                log.info("==== token ==== ::: {}", token);
+               try {
+                 return jwtTokenProvider.verifyToken(token); // 토큰 유효성 검증
+               }catch (Exception e){
+                   throw new Exception(e.getMessage());
+               }
             } else { // 유효한 인증토큰이 아닐 경우
                 throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
             }

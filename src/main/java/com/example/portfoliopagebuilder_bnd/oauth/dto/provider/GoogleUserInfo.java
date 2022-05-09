@@ -1,8 +1,10 @@
 package com.example.portfoliopagebuilder_bnd.oauth.dto.provider;
 
+import com.example.portfoliopagebuilder_bnd.oauth.dto.OAuth2UserInfo;
+
 import java.util.Map;
 
-public class GoogleUserInfo implements OAuth2UserInfo{
+public class GoogleUserInfo implements OAuth2UserInfo {
 	private Map<String, Object> attributes; // oAuth2User.getAttributes()
 
 	public GoogleUserInfo(Map<String, Object> attributes) {

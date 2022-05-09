@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.oauth.dto.provider;
+package com.example.portfoliopagebuilder_bnd.oauth.dto;
 
 public interface OAuth2UserInfo {
 	String getProviderId();

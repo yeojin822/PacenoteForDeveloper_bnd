@@ -1,7 +1,11 @@
-package com.example.portfoliopagebuilder_bnd.oauth.dto.provider;
+package com.example.portfoliopagebuilder_bnd.oauth.dto;
 
 import java.util.Map;
 
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.FacebookUserInfo;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.GoogleUserInfo;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.KakaoUserInfo;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.NaverUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

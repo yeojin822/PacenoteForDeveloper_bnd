@@ -4,10 +4,7 @@ import com.example.portfoliopagebuilder_bnd.aop.SecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.view.MustacheViewResolver;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -18,9 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(interceptor)
-				.addPathPatterns("/**")
 				.excludePathPatterns(
-						"",
 						"/",
 						"/login", // 로그인
 						"/swagger-ui.html**", //swagger
@@ -29,7 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 						"/swagger-resources/configuration/security",
 						"/swagger-resources/configuration/ui",
 						"/v2/api-docs",
-						"/configuration/**"
+						"/configuration/**",
+						"/resource/**",
+						"/favicon.ico"
 						);
 	}
 
@@ -52,4 +49,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 		registry.viewResolver(resolver);
 	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry
+				.addResourceHandler("/resources/**")
+				.addResourceLocations("/resources/","classpath:/other-resources/");
+	}
+
 }

@@ -2,7 +2,6 @@ package com.example.portfoliopagebuilder_bnd.common.config;
 
 import com.example.portfoliopagebuilder_bnd.oauth.handler.OAuth2SuccessHandler;
 import com.example.portfoliopagebuilder_bnd.oauth.service.CustomOAuth2UserService;
-import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

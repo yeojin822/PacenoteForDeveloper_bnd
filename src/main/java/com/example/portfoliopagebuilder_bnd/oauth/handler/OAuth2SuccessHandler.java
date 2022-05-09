@@ -1,8 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.oauth.handler;
 
+import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
-import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
-    private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
 
 
@@ -29,7 +28,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         log.info("authentication : " + principalDetails.getUser());
 
-        Token token = tokenService.generateToken(principalDetails.getUser().getEmail(), "ROLE_USER");
+        Token token = jwtTokenProvider.generateToken(principalDetails.getUser().getEmail(), "ROLE_USER");
         log.info("로그인 성공 ! 정보가져와서 토근 만들기 : : : {}", token);
 
         writeTokenResponse(response, token);

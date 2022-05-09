@@ -1,8 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.oauth.controller;
 
 
+import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
-import com.example.portfoliopagebuilder_bnd.oauth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @RestController
 public class TokenController {
-    private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/token/expired")
     public String auth() {
@@ -24,9 +24,9 @@ public class TokenController {
     public String refreshAuth(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader("Refresh");
 
-        if (token != null && tokenService.verifyToken(token)) {
-            String email = tokenService.getUid(token);
-            Token newToken = tokenService.generateToken(email, "USER");
+        if (token != null && jwtTokenProvider.verifyToken(token)) {
+            String email = jwtTokenProvider.getUid(token);
+            Token newToken = jwtTokenProvider.generateToken(email, "USER");
 
             response.addHeader("Auth", newToken.getToken());
             response.addHeader("Refresh", newToken.getRefreshToken());
