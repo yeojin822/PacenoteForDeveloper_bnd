@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +18,15 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    private String secretKey = "token-secret-key";
+
+    @Value("${token.secretKey}")
+    private String secretKey;
+
+    @Value("${token.tokenPeriod}")
+    long tokenPeriod;
+
+    @Value("${token.refreshPeriod}")
+    long refreshPeriod;
 
     @PostConstruct
     protected void init() {
@@ -25,8 +34,6 @@ public class JwtTokenProvider {
     }
 
     public Token generateToken(String uid, String role) {
-        long tokenPeriod = 1000L * 60L * 10L;
-        long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L;
 
         Claims claims = Jwts.claims().setSubject(uid);
         claims.put("role", role);
