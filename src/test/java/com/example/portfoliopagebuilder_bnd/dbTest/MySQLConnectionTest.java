@@ -1,7 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.dbTest;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 public class MySQLConnectionTest {
