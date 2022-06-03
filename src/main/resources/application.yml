@@ -12,3 +12,5 @@ spring:
     name: PortfolioPageBuilder
   config:
     import: configserver:${config_url}
+  profiles:
+    active: prod

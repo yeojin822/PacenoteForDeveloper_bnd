@@ -4,15 +4,15 @@ import com.example.portfoliopagebuilder_bnd.common.util.AuthorizationExtractor;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 @Slf4j
-public class SecurityInterceptor extends HandlerInterceptorAdapter {
+public class SecurityInterceptor implements HandlerInterceptor {
 
     private JwtTokenProvider jwtTokenProvider;
     private AuthorizationExtractor authorizationExtractor;
@@ -59,8 +59,4 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         log.debug("Interceptor > afterCompletion" );
     }
 
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        super.afterConcurrentHandlingStarted(request, response, handler);
-    }
 }
