@@ -6,11 +6,17 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-
 spring:
   application:
     name: PortfolioPageBuilder
   config:
     import: configserver:${config_url}
   profiles:
-    active: prod
+    active: dev
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
