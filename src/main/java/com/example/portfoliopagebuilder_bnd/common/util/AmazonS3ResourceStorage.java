@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.common.service;
+package com.example.portfoliopagebuilder_bnd.common.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -19,19 +19,19 @@ public class AmazonS3ResourceStorage {
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
-//
-//    public void store(String fullPath, MultipartFile multipartFile) {
-//        File file = new File(MultipartUtil.getLocalHomeDirectory(), fullPath);
-//        try {
-//            multipartFile.transferTo(file);
-//            amazonS3Client.putObject(new PutObjectRequest(bucket, fullPath, file)
-//                    .withCannedAcl(CannedAccessControlList.PublicRead));
-//        } catch (Exception e) {
-//            throw new RuntimeException();
-//        } finally {
-//            if (file.exists()) {
-//                file.delete();
-//            }
-//        }
-//    }
+
+    public void store(String fullPath, MultipartFile multipartFile) {
+        File file = new File(MultipartUtil.getLocalHomeDirectory(), fullPath);
+        try {
+            multipartFile.transferTo(file);
+            amazonS3Client.putObject(new PutObjectRequest(bucket, fullPath, file)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (Exception e) {
+            throw new RuntimeException();
+        } finally {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.file.service;
 
-import com.example.portfoliopagebuilder_bnd.common.service.AmazonS3ResourceStorage;
+import com.example.portfoliopagebuilder_bnd.common.util.AmazonS3ResourceStorage;
 import com.example.portfoliopagebuilder_bnd.file.dto.FileDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class FileService {
 
         public FileDetail save(MultipartFile multipartFile) {
             FileDetail fileDetail = FileDetail.multipartOf(multipartFile);
-          //  amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
+            amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
             return fileDetail;
         }
 }
