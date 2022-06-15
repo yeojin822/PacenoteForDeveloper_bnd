@@ -3,6 +3,8 @@ package com.example.portfoliopagebuilder_bnd.aop;
 import com.example.portfoliopagebuilder_bnd.common.util.AuthorizationExtractor;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +18,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
     private JwtTokenProvider jwtTokenProvider;
     private AuthorizationExtractor authorizationExtractor;
+
+
+    @Autowired
+    private Environment environment;
 
     public SecurityInterceptor(AuthorizationExtractor authorizationExtractor, JwtTokenProvider jwtTokenProvider) {
         this.authorizationExtractor = authorizationExtractor;
@@ -32,20 +38,23 @@ public class SecurityInterceptor implements HandlerInterceptor {
         if(request.getMethod().equals("OPTIONS")) { // preflight로 넘어온 options는 통과
             return true;
         }
-        else {
+
+        // 개발이면서 ppb 통과
+        if(!"prd".equals(environment.getActiveProfiles()[0]) && "ppb".equals(token)) {
+            return HandlerInterceptor.super.preHandle(request, response, handler);
+        }
+
+        try {
             if(token != null && token.length() > 0) {
                 log.info("==== token check ====");
                 log.info("==== token ==== ::: {}", token);
-               try {
-                 return jwtTokenProvider.verifyToken(token); // 토큰 유효성 검증
-               }catch (Exception e){
-                   throw new Exception(e.getMessage());
-               }
-            } else { // 유효한 인증토큰이 아닐 경우
-                throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
+                return jwtTokenProvider.verifyToken(token); // 토큰 유효성 검증
             }
-        }
-        //  return true;
+            }catch (Exception e){ // 유효한 인증토큰이 아닐 경우
+                    throw new Exception(e.getMessage());
+            }
+
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
 
