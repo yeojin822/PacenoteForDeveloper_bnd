@@ -14,4 +14,12 @@ public class PortfolioPageBuilderBndApplication {
         SpringApplication.run(PortfolioPageBuilderBndApplication.class, args);
     }
 
+//    @Bean
+//    MultipartConfigElement multipartConfigElement() {
+//        MultipartConfigFactory factory = new MultipartConfigFactory();
+//        factory.setMaxFileSize(DataSize.ofBytes(-1));
+//        factory.setMaxRequestSize(DataSize.ofBytes(-1));
+//        return factory.createMultipartConfig();
+//    }
+
 }
