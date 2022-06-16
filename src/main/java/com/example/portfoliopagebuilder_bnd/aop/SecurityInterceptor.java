@@ -4,6 +4,7 @@ import com.example.portfoliopagebuilder_bnd.common.util.AuthorizationExtractor;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,6 +20,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
     private JwtTokenProvider jwtTokenProvider;
     private AuthorizationExtractor authorizationExtractor;
 
+    @Value("${token.devKey}")
+    private String devKey;
 
     @Autowired
     private Environment environment;
@@ -40,7 +43,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         }
 
         // 개발이면서 ppb 통과
-        if(!"prd".equals(environment.getActiveProfiles()[0]) && "ppb".equals(token)) {
+        if(!"prd".equals(environment.getActiveProfiles()[0]) && devKey.equals(token)) {
             return HandlerInterceptor.super.preHandle(request, response, handler);
         }
 
