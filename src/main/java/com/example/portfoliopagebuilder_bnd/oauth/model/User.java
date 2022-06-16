@@ -41,6 +41,7 @@ public class User {
 	@NotNull
 	private String role;
 
+	private String profile;
 	private String provider; // oauth (ex. google)
 	private String providerId; // oauthId ( google.sub = 101897731656893138339)
 

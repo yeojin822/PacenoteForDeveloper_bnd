@@ -20,3 +20,6 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: ERROR
+
+mybatis:
+  config-location: classpath:META-INF/mybatis/mybatis-config.xml
