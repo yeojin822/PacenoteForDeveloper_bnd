@@ -41,23 +41,24 @@ public class SecurityInterceptor implements HandlerInterceptor {
         if(request.getMethod().equals("OPTIONS")) { // preflight로 넘어온 options는 통과
             return true;
         }
+        else {
+            // 개발이면서 dev token일 경우 통과
+            if (!"prd".equals(environment.getActiveProfiles()[0]) && devKey.equals(token)) {
+                return HandlerInterceptor.super.preHandle(request, response, handler);
+            }
 
-        // 개발이면서 ppb 통과
-        if(!"prd".equals(environment.getActiveProfiles()[0]) && devKey.equals(token)) {
-            return HandlerInterceptor.super.preHandle(request, response, handler);
-        }
-
-        try {
             if(token != null && token.length() > 0) {
                 log.info("==== token check ====");
                 log.info("==== token ==== ::: {}", token);
-                return jwtTokenProvider.verifyToken(token); // 토큰 유효성 검증
-            }
-            }catch (Exception e){ // 유효한 인증토큰이 아닐 경우
+                try {
+                    return jwtTokenProvider.verifyToken(token); // 토큰 유효성 검증
+                }catch (Exception e){
                     throw new Exception(e.getMessage());
+                }
+            } else { // 유효한 인증토큰이 아닐 경우
+                throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
             }
-
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        }
     }
 
 
