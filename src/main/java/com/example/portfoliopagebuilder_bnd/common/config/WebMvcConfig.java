@@ -32,12 +32,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 						);
 	}
 
-//	@Bean(name = "filterMultipartResolver")
-//	public CommonsMultipartResolver createMultipartResolver() {
-//		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-//		resolver.setDefaultEncoding("utf-8");
-//		return resolver;
-//	}
+	@Bean(name = "filterMultipartResolver")
+	public CommonsMultipartResolver createMultipartResolver() {
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("utf-8");
+		return resolver;
+	}
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
