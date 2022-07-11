@@ -52,7 +52,7 @@ public class AmazonS3Service {
             PutObjectRequest request = new PutObjectRequest(bucketName, path, file.getInputStream(), objectMetadata);
             amazonS3Client.putObject(request);
 
-            User user = userRepository.findById(Long.parseLong(req.getParameter("id"))).orElseThrow(() -> new IllegalArgumentException("no such data"));
+            User user = userRepository.findById(req.getParameter("id")).orElseThrow(() -> new IllegalArgumentException("no such data"));
             user.setProfile(path);
             userRepository.save(user);
 

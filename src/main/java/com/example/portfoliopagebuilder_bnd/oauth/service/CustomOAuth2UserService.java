@@ -37,7 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	}
 
 	private User saveOrUpdate(OAuthAttributes attributes) {
-		User user = userRepository.findByProviderId(attributes.getProviderId())
+		User user = userRepository.findById(attributes.getProviderId())
 			.map(entity -> entity.update(attributes.getUsername(), attributes.getEmail()))
 			.orElse(attributes.toEntity());
 

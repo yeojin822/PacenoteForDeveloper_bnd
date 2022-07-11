@@ -2,10 +2,8 @@ package com.example.portfoliopagebuilder_bnd.oauth.dto;
 
 import java.util.Map;
 
-import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.FacebookUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.GoogleUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.KakaoUserInfo;
-import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.NaverUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +16,6 @@ public class OAuthAttributes {
 	private String provider;
 	private String providerId;
 	private String username;
-	private String password;
 	private String email;
 
 	@Builder
@@ -26,7 +23,6 @@ public class OAuthAttributes {
 		this.provider = provider;
 		this.providerId = providerId;
 		this.username = username;
-		this.password = password;
 		this.email = email;
 	}
 
@@ -34,13 +30,7 @@ public class OAuthAttributes {
 		if("google".equals(provider)){
 			log.info("구글 로그인 요청");
 			return createUser(new GoogleUserInfo(attributes));
-		} else if("facebook".equals(provider)){
-			log.info("페이스북 로그인 요청");
-			return createUser(new FacebookUserInfo(attributes));
-		}else if("naver".equals(provider)){
-			log.info("네이버 로그인 요청");
-			return createUser(new NaverUserInfo((Map)attributes.get("response")));
-		}else if("kakao".equals(provider)){
+		} else if("kakao".equals(provider)){
 			log.info("카카오 로그인 요청");
 			return createUser(new KakaoUserInfo(attributes));
 		}
@@ -57,16 +47,13 @@ public class OAuthAttributes {
 				.append(oAuth2UserInfo.getProviderId()).toString())
 			.username(oAuth2UserInfo.getName())
 			.email(oAuth2UserInfo.getEmail())
-			.password(new BCryptPasswordEncoder().encode("getinthere"))
 			.build();
 	}
 
 	public User toEntity(){
 		return User.builder()
-			.provider(provider)
-			.providerId(providerId)
+			.id(providerId)
 			.username(username)
-			.password(password)
 			.email(email)
 			.role("ROLE_USER")
 			.build();

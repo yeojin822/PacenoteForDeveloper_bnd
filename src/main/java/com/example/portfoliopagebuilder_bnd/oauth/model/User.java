@@ -17,46 +17,37 @@ import lombok.NoArgsConstructor;
 
 /**
  * oauth2 google user
- * username = google_{sub}
- * password = "암호화(겟인데어)" > 의미없음
+ * id = provider_providerId
+ * username = {sub}
  * email = {email}
  * role = "ROLE_USER"
- * provider = "google"
- * providerId = {sub}
+
+
  */
 @Entity
 @Data
 @NoArgsConstructor
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
+	private String id;
 	@NotNull
 	private String username;
-	@NotNull
-	private String password;
 	@NotNull
 	private String email;
 	@NotNull
 	private String role;
-
 	private String profile;
-	private String provider; // oauth (ex. google)
-	private String providerId; // oauthId ( google.sub = 101897731656893138339)
+
 
 	@CreationTimestamp
 	private Timestamp createDate;
 
 	@Builder
-	public User(String username, String password, String email, String role, String provider,
-		String providerId, Timestamp createDate) {
+	public User(String id, String username, String email, String role, Timestamp createDate) {
+		this.id = id;
 		this.username = username;
-		this.password = password;
 		this.email = email;
 		this.role = role;
-		this.provider = provider;
-		this.providerId = providerId;
 		this.createDate = createDate;
 	}
 
