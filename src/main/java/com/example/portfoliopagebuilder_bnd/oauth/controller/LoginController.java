@@ -1,3 +1,35 @@
+package com.example.portfoliopagebuilder_bnd.oauth.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 로그인 컨트롤러
+ */
+@RestController
+@Slf4j
+@RequestMapping("/api/login")
+public class LoginController {
+
+    private final Environment environment;
+
+    @Autowired
+    public LoginController(Environment environment){
+        this.environment = environment;
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<?> token() throws Exception{
+        return new ResponseEntity(HttpStatus.OK);
+    }
+}
+
 //package com.example.portfoliopagebuilder_bnd.oauth.controller;
 //
 //import com.example.portfoliopagebuilder_bnd.oauth.repository.UserRepository;
@@ -64,44 +96,5 @@
 ////		return "user";
 ////	}
 ////
-////	@GetMapping("/admin")
-////	public String admin(){
-////		return "admin";
-////	}
-////
-////	@GetMapping("/manager")
-////	public String manager(){
-////		return "manager";
-////	}
-////
-////	@GetMapping("/loginForm")
-////	public String loginForm(){
-////		return "loginForm";
-////	}
-////
-////	@GetMapping("/joinForm")
-////	public String joinForm(){
-////		return "joinForm";
-////	}
-////
-////	@PostMapping("/join")
-////	public String join(User user) {
-////		user.setRole("ROLE_USER");
-////		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-////		userRepository.save(user);
-////
-////		return "redirect:/loginForm";
-////	}
-////
-////	@Secured("ROLE_ADMIN")
-////	@GetMapping("/data")
-////	public String data(){
-////		return "data only admin";
-////	}
-////
-////	@PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-////	@GetMapping("/users")
-////	public String userList(){
-////		return "user list only manager, admin";
-////	}
+
 //}

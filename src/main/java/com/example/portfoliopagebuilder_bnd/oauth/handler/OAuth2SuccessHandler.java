@@ -1,8 +1,10 @@
 package com.example.portfoliopagebuilder_bnd.oauth.handler;
 
+import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
+import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Slf4j
@@ -25,26 +26,31 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-       log.info("로그인 성공 핸들러가 작동중입니다.");
-        HttpSession session = request.getSession();
+
+        log.info("Start oauth :: ");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        log.info("from user :: " + principalDetails.getUser());
+        User user;
+        // 세션키 생성
+        try {
+            Token token = jwtTokenProvider.createToken(principalDetails.getUser());
+            log.info("token:: {}" , token);
+            BaseResponse res = new BaseResponse();
+            res.setBody(token);
 
-        session.setAttribute("USER", principalDetails);
 
-        log.info("authentication : " + principalDetails.getUser());
-        log.info("로그인 성공 ! 정보가져와서 토근 만들기 : : : {}", session);
+            response.setContentType("text/html;charset=UTF-8");
+            response.setHeader("Cache-Control", "no-cache, no-store");
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(200);
 
-        writeTokenResponse(response, session);
+            var writer = response.getWriter();
+            writer.println(objectMapper.writeValueAsString(res));
+            writer.flush();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-
-    private void writeTokenResponse(HttpServletResponse response, HttpSession session) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-
-        var writer = response.getWriter();
-        writer.println(objectMapper.writeValueAsString(session));
-        writer.flush();
-    }
-
 
 }

@@ -1,8 +1,12 @@
 package com.example.portfoliopagebuilder_bnd.common.util;
 
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
 import com.example.portfoliopagebuilder_bnd.oauth.exception.ExceptionEnum;
 import com.example.portfoliopagebuilder_bnd.oauth.exception.OAuth2ProcessingException;
+import com.example.portfoliopagebuilder_bnd.oauth.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -25,18 +29,20 @@ public class JwtTokenProvider {
     @Value("${token.tokenPeriod}")
     long tokenPeriod;
 
-    @Value("${token.refreshPeriod}")
-    long refreshPeriod;
-
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public Token generateToken(String uid, String role) {
+    public Token createToken(User user) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        User ppbUser = new User();
+        ppbUser.setId(user.getId());
+        ppbUser.setUsername(user.getUsername());
 
-        Claims claims = Jwts.claims().setSubject(uid);
-        claims.put("role", role);
+        String userStr = mapper.writeValueAsString(ppbUser);
+
+        Claims claims = Jwts.claims().setSubject(userStr);
 
         Date now = new Date();
         return new Token(
@@ -45,26 +51,21 @@ public class JwtTokenProvider {
                         .setIssuedAt(now)
                         .setExpiration(new Date(now.getTime() + tokenPeriod))
                         .signWith(SignatureAlgorithm.HS256, secretKey)
-                        .compact(),
-                Jwts.builder()
-                        .setClaims(claims)
-                        .setIssuedAt(now)
-                        .setExpiration(new Date(now.getTime() + refreshPeriod))
-                        .signWith(SignatureAlgorithm.HS256, secretKey)
                         .compact());
     }
 
-    public boolean verifyToken(String token){
+    public User verifyToken(String token){
         log.info("token check start !!");
         try {
-            Jws<Claims> claims = Jwts.parser()
+            Claims  claims = Jwts.parser()
                     .setSigningKey(secretKey)
-                    .parseClaimsJws(token);
-            log.info("verify Token ::: {}",claims.getBody().getExpiration().after(new Date()));
+                    .parseClaimsJws(token)
+                    .getBody();
 
-            return claims.getBody()
-                    .getExpiration()
-                    .after(new Date());
+            ObjectMapper mapper = new ObjectMapper();
+            User user =  mapper.readValue(claims.getSubject(), User.class);
+
+            return user;
 
         } catch (Exception e) {
             log.info("errorType ::: {}", e.getClass().getSimpleName());
