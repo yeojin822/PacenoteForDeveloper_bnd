@@ -2,6 +2,7 @@ package com.example.portfoliopagebuilder_bnd.oauth.handler;
 
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PpbUser;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
@@ -30,13 +31,16 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         log.info("Start oauth :: ");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         log.info("from user :: " + principalDetails.getUser());
-        User user;
+        PpbUser user = new PpbUser();
+        user.setId(principalDetails.getUser().getId());
+        user.setUsername(principalDetails.getUser().getUsername());
         // 세션키 생성
         try {
-            Token token = jwtTokenProvider.createToken(principalDetails.getUser());
-            log.info("token:: {}" , token);
+            Token token = jwtTokenProvider.createToken(user);
+
+            user.setSessionKey(token.getSessionKey());
             BaseResponse res = new BaseResponse();
-            res.setBody(token);
+            res.setBody(user);
 
 
             response.setContentType("text/html;charset=UTF-8");

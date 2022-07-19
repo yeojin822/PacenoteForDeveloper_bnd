@@ -1,14 +1,11 @@
 package com.example.portfoliopagebuilder_bnd.common.util;
 
-import com.example.portfoliopagebuilder_bnd.oauth.dto.PrincipalDetails;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.PpbUser;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.Token;
 import com.example.portfoliopagebuilder_bnd.oauth.exception.ExceptionEnum;
 import com.example.portfoliopagebuilder_bnd.oauth.exception.OAuth2ProcessingException;
-import com.example.portfoliopagebuilder_bnd.oauth.model.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +31,9 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public Token createToken(User user) throws Exception {
+    public Token createToken(PpbUser user) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        User ppbUser = new User();
+        PpbUser ppbUser = new PpbUser();
         ppbUser.setId(user.getId());
         ppbUser.setUsername(user.getUsername());
 
@@ -54,7 +51,7 @@ public class JwtTokenProvider {
                         .compact());
     }
 
-    public User verifyToken(String token){
+    public PpbUser verifyToken(String token){
         log.info("token check start !!");
         try {
             Claims  claims = Jwts.parser()
@@ -63,7 +60,7 @@ public class JwtTokenProvider {
                     .getBody();
 
             ObjectMapper mapper = new ObjectMapper();
-            User user =  mapper.readValue(claims.getSubject(), User.class);
+            PpbUser user =  mapper.readValue(claims.getSubject(), PpbUser.class);
 
             return user;
 
