@@ -33,10 +33,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable();
-		http.oauth2Login()
-			.successHandler(successHandler)
-			.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
-			.userService(oAuth2UserService);
+		http	.csrf().disable()
+				.formLogin().disable()
+				.httpBasic().disable()
+				.oauth2Login()
+				.authorizationEndpoint()
+				.baseUri("/oauth2/authorization")
+				.and()
+				.redirectionEndpoint()
+				.baseUri("/*/oauth2/code/*")
+				.and()
+				.userInfoEndpoint()
+				.userService(oAuth2UserService)
+				.and()
+				.successHandler(successHandler)
+				.failureUrl("/");
+
+//		http.csrf().disable();
+//		http.oauth2Login()
+//			.successHandler(successHandler)
+//			.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
+//			.userService(oAuth2UserService);
 	}
 }

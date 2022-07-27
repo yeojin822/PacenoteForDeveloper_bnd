@@ -58,7 +58,7 @@ public class OAuthAttributes {
 			.id(providerId)
 			.username(username)
 			.email(email)
-			.role("ROLE_USER")
+			.role(RoleType.USER.getCode())
 			.build();
 	}
 }

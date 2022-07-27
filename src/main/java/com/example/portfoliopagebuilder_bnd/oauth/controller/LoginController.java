@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 로그인 컨트롤러
  */
@@ -28,6 +30,7 @@ public class LoginController {
     public ResponseEntity<?> token() throws Exception{
         return new ResponseEntity(HttpStatus.OK);
     }
+
 }
 
 //package com.example.portfoliopagebuilder_bnd.oauth.controller;
