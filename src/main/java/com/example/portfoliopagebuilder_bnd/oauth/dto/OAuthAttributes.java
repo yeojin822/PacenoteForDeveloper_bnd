@@ -2,11 +2,10 @@ package com.example.portfoliopagebuilder_bnd.oauth.dto;
 
 import java.util.Map;
 
-import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.GoogleUserInfo;
+import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.GitHubUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.dto.provider.KakaoUserInfo;
 import com.example.portfoliopagebuilder_bnd.oauth.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -27,9 +26,9 @@ public class OAuthAttributes {
 	}
 
 	public static OAuthAttributes of(String provider, Map<String, Object> attributes){
-		if("google".equals(provider)){
-			log.info("구글 로그인 요청");
-			return createUser(new GoogleUserInfo(attributes));
+		if("github".equals(provider)){
+			log.info("깃허브 로그인 요청");
+			return createUser(new GitHubUserInfo(attributes));
 		} else if("kakao".equals(provider)){
 			log.info("카카오 로그인 요청");
 			return createUser(new KakaoUserInfo(attributes));
@@ -40,6 +39,10 @@ public class OAuthAttributes {
 
 	private static OAuthAttributes createUser(OAuth2UserInfo oAuth2UserInfo){
 		StringBuilder sb = new StringBuilder();
+		log.info("oAuth2UserInfo :: {}" , oAuth2UserInfo.getEmail());
+		log.info("oAuth2UserInfo :: {}" , oAuth2UserInfo.getName());
+		log.info("oAuth2UserInfo :: {}" , oAuth2UserInfo.getProvider());
+		log.info("oAuth2UserInfo :: {}" , oAuth2UserInfo.getProviderId());
 		return OAuthAttributes.builder()
 			.provider(oAuth2UserInfo.getProvider())
 			.providerId(sb.append(oAuth2UserInfo.getProvider())

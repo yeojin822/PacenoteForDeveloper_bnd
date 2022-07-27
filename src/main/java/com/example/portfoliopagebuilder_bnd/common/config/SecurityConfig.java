@@ -34,11 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.formLogin()
-			.loginPage("/loginForm")
-			.loginProcessingUrl("/login") //login주소가 호출되면 security에서 낚아채서 대신 로그인 진행
-			.and()
-			.oauth2Login()
+		http.oauth2Login()
 			.successHandler(successHandler)
 			.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
 			.userService(oAuth2UserService);
