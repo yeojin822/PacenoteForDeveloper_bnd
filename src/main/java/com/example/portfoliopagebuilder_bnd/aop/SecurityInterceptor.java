@@ -54,7 +54,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         // 세션이 없으면 에러
         if (session_obj == null) {
             log.info("session_obj == null");
-정            throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
+            throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
         }
 
         // 개발이면서 refine이면 통과
