@@ -19,8 +19,6 @@ import lombok.NoArgsConstructor;
  * username = {sub}
  * email = {email}
  * role = "ROLE_USER"
-
-
  */
 @Entity
 @Data
