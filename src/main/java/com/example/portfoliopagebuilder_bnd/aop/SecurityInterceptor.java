@@ -1,12 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.aop;
 
-import com.example.portfoliopagebuilder_bnd.common.util.AuthorizationExtractor;
-import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
-import com.example.portfoliopagebuilder_bnd.common.util.PpbUtill;
-import com.example.portfoliopagebuilder_bnd.oauth.dto.PpbUser;
-import com.example.portfoliopagebuilder_bnd.oauth.model.User;
+import com.example.portfoliopagebuilder_bnd.domain.oauth.PpbUser;
+import com.example.portfoliopagebuilder_bnd.util.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -16,17 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class SecurityInterceptor implements HandlerInterceptor {
 
     private JwtTokenProvider jwtTokenProvider;
-    private AuthorizationExtractor authorizationExtractor;
 
     @Value("${token.devKey}")
     private String devKey;
@@ -34,8 +25,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Autowired
     private Environment environment;
 
-    public SecurityInterceptor(AuthorizationExtractor authorizationExtractor, JwtTokenProvider jwtTokenProvider) {
-        this.authorizationExtractor = authorizationExtractor;
+    public SecurityInterceptor(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
