@@ -16,5 +16,6 @@ public class BuilderId implements Serializable {
     private String id;
 
     @Column(name = "idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 }

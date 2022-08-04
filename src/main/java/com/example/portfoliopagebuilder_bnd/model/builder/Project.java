@@ -1,12 +1,11 @@
 package com.example.portfoliopagebuilder_bnd.model.builder;
 
+import com.example.portfoliopagebuilder_bnd.domain.builder.Term;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -18,15 +17,22 @@ public class Project  implements Serializable {
 
     @EmbeddedId
     private BuilderId id;
-    private String text1;
-    private String text2;
-    private String startDate;
-    private String endDate;
-    private String text3;
-    private String text4;
-    private String keyword1;
-    private String keyword2;
-    private String keyword3;
+
+    @Column(name = "text1")
+    private String projectName;
+
+    @Column(name = "text2")
+    private String projectOrganigation;
+
+    @Embedded
+    private Term term;
+
+    @Column(name = "text3")
+    private String projectSkills;
+
+    @Column(name = "text4")
+    private String projectSkillSet;
+
     @CreationTimestamp
     private Timestamp writeDate;
     private Timestamp modifyDate;

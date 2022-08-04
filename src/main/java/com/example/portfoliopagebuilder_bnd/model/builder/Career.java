@@ -1,9 +1,12 @@
 package com.example.portfoliopagebuilder_bnd.model.builder;
 
+import com.example.portfoliopagebuilder_bnd.domain.builder.Term;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -17,11 +20,18 @@ public class Career implements Serializable {
 
     @EmbeddedId
     private BuilderId id;
-    private String text1;
-    private String text2;
-    private String startDate;
-    private String endDate;
-    private String text3;
+
+    @Column(name = "text1")
+    private String careerMainText;
+
+    @Column(name = "text2")
+    private String careerSubText;
+
+    @Column(name = "text3")
+    private String careerDescription;
+
+    @Embedded
+    private Term term;
 
     @CreationTimestamp
     private Timestamp writeDate;
