@@ -1,17 +1,58 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.CareerRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.PortfolioRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.ProfileRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.ProjectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BuilderServiceImplTest {
+
+    @Mock
+    ProjectRepository projectRepository;
+
+    @Mock
+    PortfolioRepository portfolioRepository;
+
+    @Mock
+    ProfileRepository profileRepository;
+
+    @Mock
+    CareerRepository careerRepository;
+
+    @Mock
+    UserRepository userRepository;
+
     private BuilderService builderService;
+    String profile = "{\n" +
+            "  \"id\": \"kakao_test\",\n" +
+        "      \"blockType\": \"Profile\",\n" +
+        "      \"fieldValues\": {\n" +
+        "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
+        "        \"profileMainText\": \"Front End Developer\",\n" +
+        "        \"profileSubText\": \"안녕하세요 :) 서핏 팀의 \\n디자이너 박소연입니다.\",\n" +
+        "        \"profileAdditionalInfo\": \"apply\",\n" +
+        "        \"profileApplyCompany\": \"당근마켓\",\n" +
+        "        \"profileApplyPosition\": \"Front End\",\n" +
+        "        \"profilePhoneNumber\": \"010-3734-1715\",\n" +
+        "        \"profileEmail\": \"ket8780@gmail.com\",\n" +
+        "        \"profileGitHubURL\": \"https://github.com/choiseunghyeon\",\n" +
+        "        \"profileKeyword1\": \"근명\",\n" +
+        "        \"profileKeyword2\": \"성실\",\n" +
+        "        \"profileKeyword3\": \"책임\",\n" +
+        "        \"profileKeyword4\": \"개발\",\n" +
+        "        \"profileKeyword5\": \"혁신\"\n" +
+        "      }\n" +
+            "}";
+
     String json = "{\n" +
             "  \"id\": 1,\n" +
             "  \"blocks\": [\n" +
@@ -21,7 +62,7 @@ class BuilderServiceImplTest {
             "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
             "        \"profileMainText\": \"Front End Developer\",\n" +
             "        \"profileSubText\": \"안녕하세요 :) 서핏 팀의 \\n디자이너 박소연입니다.\",\n" +
-            "        \"profileAdditionalnfo\": \"apply\",\n" +
+            "        \"profileAdditionalInfo\": \"apply\",\n" +
             "        \"profileApplyCompany\": \"당근마켓\",\n" +
             "        \"profileApplyPosition\": \"Front End\",\n" +
             "        \"profilePhoneNumber\": \"010-3734-1715\",\n" +
@@ -129,11 +170,18 @@ class BuilderServiceImplTest {
             "}";
     @BeforeEach
     public void setup(){
-        builderService = new BuilderServiceImpl();
+        builderService = new BuilderServiceImpl(projectRepository, portfolioRepository, profileRepository, careerRepository, userRepository);
     }
+
     @Test
     void updateBuilder() throws Exception {
          ObjectMapper mapper = new ObjectMapper();
         assertThat(builderService.updateBuilder(mapper.readValue(json, Map.class))).isEqualTo(true);
+    }
+
+    @Test
+    void testSave() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        assertThat(builderService.testSave(mapper.readValue(profile, Map.class))).isEqualTo(true);
     }
 }

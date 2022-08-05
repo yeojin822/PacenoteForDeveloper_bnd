@@ -1,6 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.model.builder;
 
 import com.example.portfoliopagebuilder_bnd.domain.builder.Term;
+import com.example.portfoliopagebuilder_bnd.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,14 +16,20 @@ import java.sql.Timestamp;
 public class Project  implements Serializable {
     static final long serialVersionUID = 1L;
 
-    @EmbeddedId
-    private BuilderId id;
+    @ManyToOne
+    @JoinColumn(name="id")
+    private User user;
+
+    @Id
+    @Column(name = "idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
 
     @Column(name = "text1")
     private String projectName;
 
     @Column(name = "text2")
-    private String projectOrganigation;
+    private String projectDescription;
 
     @Embedded
     private Term term;

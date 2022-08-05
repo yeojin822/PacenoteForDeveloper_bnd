@@ -28,4 +28,11 @@ public class BuilderController {
     public ResponseEntity<?> updateBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
         return builderService.updateBuilder(param);
     }
+
+
+    @PostMapping("/save")
+    @ResponseBody
+    public boolean saveBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
+        return builderService.testSave(param);
+    }
 }
