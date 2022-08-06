@@ -51,7 +51,7 @@ public class BuilderServiceImpl implements BuilderService {
 
         for (int i = 0; i < blocks.size(); i++) {
             Map<String, Object> test = mapper.convertValue(blocks.get(i), Map.class);
-            System.out.println("---------------------");
+            log.info("---------------------");
             if(test.get("blockType").equals("Profile")) {
                 Profile proile = mapper.convertValue(test.get("fieldValues"), Profile.class);
                 proile.setUser(user);

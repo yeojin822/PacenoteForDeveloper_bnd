@@ -29,15 +29,18 @@ public class Project  implements Serializable {
     private String projectName;
 
     @Column(name = "text2")
+    private String projectOrganigation;
+
+    @Column(name = "text3")
     private String projectDescription;
 
     @Embedded
-    private Term term;
-
-    @Column(name = "text3")
-    private String projectSkills;
+    private Term projectTerm;
 
     @Column(name = "text4")
+    private String projectSkills;
+
+    @Column(name = "text5")
     private String projectSkillSet;
 
     @CreationTimestamp
