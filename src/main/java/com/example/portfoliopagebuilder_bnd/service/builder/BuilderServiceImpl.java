@@ -1,5 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
+import com.example.portfoliopagebuilder_bnd.domain.builder.Builder;
+import com.example.portfoliopagebuilder_bnd.domain.builder.BuilderType;
 import com.example.portfoliopagebuilder_bnd.model.User;
 import com.example.portfoliopagebuilder_bnd.model.builder.Career;
 import com.example.portfoliopagebuilder_bnd.model.builder.Portfolio;
@@ -62,31 +64,35 @@ public class BuilderServiceImpl implements BuilderService {
             if(test.get("blockType").equals("Project")) {
                 Project project = mapper.convertValue(test.get("fieldValues"), Project.class);
                 project.setUser(user);
-                log.info("set profile ::: {}", project);
+                log.info("set Project ::: {}", project);
                 projectRepository.save(project);
             }
 
             if(test.get("blockType").equals("Career")) {
                 Career career = mapper.convertValue(test.get("fieldValues"), Career.class);
                 career.setUser(user);
-                log.info("set profile ::: {}", career);
+                log.info("set Career ::: {}", career);
                 careerRepository.save(career);
             }
 
             if(test.get("blockType").equals("Portfolio")) {
                 Portfolio portfolio = mapper.convertValue(test.get("fieldValues"), Portfolio.class);
                 portfolio.setUser(user);
-                log.info("set profile ::: {}", portfolio);
+                log.info("set Portfolio ::: {}", portfolio);
                 portfolioRepository.save(portfolio);
             }
 
         }
 
-        return false;
+        return true;
     }
 
     @Override
     public ResponseEntity<?> detail(String id) throws Exception{
+        Builder builder = new Builder();
+        BuilderType builderType = new BuilderType();
+        builder.setId(id);
+
         return null;
     }
 

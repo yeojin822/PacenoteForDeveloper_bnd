@@ -35,7 +35,7 @@ public class Career implements Serializable {
     private String careerDescription;
 
     @Embedded
-    private Term term;
+    private Term careerTerm;
 
     @CreationTimestamp
     private Timestamp writeDate;

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -41,7 +42,8 @@ public class Project  implements Serializable {
     private String projectSkills;
 
     @Column(name = "text5")
-    private String projectSkillSet;
+    @ElementCollection(targetClass=String.class)
+    private List<String> projectSkillSet;
 
     @CreationTimestamp
     private Timestamp writeDate;
