@@ -41,9 +41,8 @@ public class Project  implements Serializable {
     @Column(name = "text4")
     private String projectSkills;
 
-    @Column(name = "text5")
-    @ElementCollection(targetClass=String.class)
-    private List<String> projectSkillSet;
+    @Column(name = "text5", columnDefinition = "JSON")
+    private String projectSkillSet;
 
     @CreationTimestamp
     private Timestamp writeDate;

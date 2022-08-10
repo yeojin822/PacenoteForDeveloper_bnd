@@ -52,31 +52,31 @@ public class BuilderServiceImpl implements BuilderService {
         ArrayList blocks = (ArrayList) param.get("blocks");
 
         for (int i = 0; i < blocks.size(); i++) {
-            Map<String, Object> test = mapper.convertValue(blocks.get(i), Map.class);
+            Map<String, Object> builderItem = mapper.convertValue(blocks.get(i), Map.class);
             log.info("---------------------");
-            if(test.get("blockType").equals("Profile")) {
-                Profile proile = mapper.convertValue(test.get("fieldValues"), Profile.class);
+            if(builderItem.get("blockType").equals("Profile")) {
+                Profile proile = mapper.convertValue(builderItem.get("fieldValues"), Profile.class);
                 proile.setUser(user);
                 log.info("set profile ::: {}", proile);
                 profileRepository.save(proile);
             }
 
-            if(test.get("blockType").equals("Project")) {
-                Project project = mapper.convertValue(test.get("fieldValues"), Project.class);
+            if(builderItem.get("blockType").equals("Project")) {
+                Project project = mapper.convertValue(builderItem.get("fieldValues"), Project.class);
                 project.setUser(user);
                 log.info("set Project ::: {}", project);
                 projectRepository.save(project);
             }
 
-            if(test.get("blockType").equals("Career")) {
-                Career career = mapper.convertValue(test.get("fieldValues"), Career.class);
+            if(builderItem.get("blockType").equals("Career")) {
+                Career career = mapper.convertValue(builderItem.get("fieldValues"), Career.class);
                 career.setUser(user);
                 log.info("set Career ::: {}", career);
                 careerRepository.save(career);
             }
 
-            if(test.get("blockType").equals("Portfolio")) {
-                Portfolio portfolio = mapper.convertValue(test.get("fieldValues"), Portfolio.class);
+            if(builderItem.get("blockType").equals("Portfolio")) {
+                Portfolio portfolio = mapper.convertValue(builderItem.get("fieldValues"), Portfolio.class);
                 portfolio.setUser(user);
                 log.info("set Portfolio ::: {}", portfolio);
                 portfolioRepository.save(portfolio);
