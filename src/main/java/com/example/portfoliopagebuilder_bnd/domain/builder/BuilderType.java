@@ -4,10 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class BuilderType {
     private String blockType;
-    private ArrayList<Object> fieldValues;
+    private List<Object> fieldValues = new ArrayList<>();
 }

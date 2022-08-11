@@ -16,7 +16,7 @@ public class Portfolio implements Serializable {
     static final long serialVersionUID = 1L;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="user_id")
     private User user;
 
     @Id

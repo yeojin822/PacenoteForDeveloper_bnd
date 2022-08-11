@@ -2,6 +2,7 @@ package com.example.portfoliopagebuilder_bnd.model.builder;
 
 import com.example.portfoliopagebuilder_bnd.domain.builder.Term;
 import com.example.portfoliopagebuilder_bnd.model.User;
+import com.example.portfoliopagebuilder_bnd.util.StringListConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,7 +19,7 @@ public class Project  implements Serializable {
     static final long serialVersionUID = 1L;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="user_id")
     private User user;
 
     @Id
@@ -42,7 +43,8 @@ public class Project  implements Serializable {
     private String projectSkills;
 
     @Column(name = "text5", columnDefinition = "JSON")
-    private String projectSkillSet;
+    @Convert(converter = StringListConverter.class)
+    private List<String> projectSkillSet;
 
     @CreationTimestamp
     private Timestamp writeDate;

@@ -184,4 +184,9 @@ class BuilderServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         assertThat(builderService.testSave(mapper.readValue(profile, Map.class))).isEqualTo(true);
     }
+
+    @Test
+    void select() throws Exception {
+        assertThat(builderService.detail("kakao_2224182301")).isEqualTo(null);
+    }
 }

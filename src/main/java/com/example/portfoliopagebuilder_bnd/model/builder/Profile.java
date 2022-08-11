@@ -17,7 +17,7 @@ public class Profile implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="user_id")
     private User user;
 
     @Id

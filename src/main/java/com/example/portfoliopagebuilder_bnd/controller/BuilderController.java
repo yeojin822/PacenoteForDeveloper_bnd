@@ -19,7 +19,7 @@ public class BuilderController {
     BuilderService builderService;
 
     @Autowired
-    public BuilderController(BuilderService builderService){
+    public BuilderController(BuilderService builderService) {
         this.builderService = builderService;
     }
 
@@ -35,4 +35,11 @@ public class BuilderController {
     public boolean saveBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
         return builderService.testSave(param);
     }
+
+    @GetMapping("/{userId}")
+    @ResponseBody
+    public ResponseEntity<?> detail(@PathVariable String userId) throws Exception {
+        return builderService.detail(userId);
+    }
+
 }

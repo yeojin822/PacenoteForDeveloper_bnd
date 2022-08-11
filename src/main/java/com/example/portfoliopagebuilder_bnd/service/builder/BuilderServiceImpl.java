@@ -2,6 +2,7 @@ package com.example.portfoliopagebuilder_bnd.service.builder;
 
 import com.example.portfoliopagebuilder_bnd.domain.builder.Builder;
 import com.example.portfoliopagebuilder_bnd.domain.builder.BuilderType;
+import com.example.portfoliopagebuilder_bnd.domain.builder.FieldProfile;
 import com.example.portfoliopagebuilder_bnd.model.User;
 import com.example.portfoliopagebuilder_bnd.model.builder.Career;
 import com.example.portfoliopagebuilder_bnd.model.builder.Portfolio;
@@ -12,6 +13,7 @@ import com.example.portfoliopagebuilder_bnd.repository.builder.CareerRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.PortfolioRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.ProfileRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.ProjectRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -89,9 +92,18 @@ public class BuilderServiceImpl implements BuilderService {
 
     @Override
     public ResponseEntity<?> detail(String id) throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
         Builder builder = new Builder();
-        BuilderType builderType = new BuilderType();
         builder.setId(id);
+
+        BuilderType builderType = new BuilderType();
+        log.info("id : {}", id);
+        List<FieldProfile> test = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<List<FieldProfile>>(){});
+        log.info("test ::: {}", test );
+        builderType.setBlockType(test.getClass().getTypeName());
+//        builderType.setFieldValues(test);
+
+        log.info("상태 체크 :: {}", builderType);
 
         return null;
     }
@@ -101,6 +113,7 @@ public class BuilderServiceImpl implements BuilderService {
         log.info("id  ::: {}", param.get("id"));
         ArrayList blocks = (ArrayList) param.get("blocks");
         ObjectMapper mapper = new ObjectMapper();
+
 
         for (int i = 0; i < blocks.size(); i++) {
             Map<String, Object> test = mapper.convertValue(blocks.get(i), Map.class);
