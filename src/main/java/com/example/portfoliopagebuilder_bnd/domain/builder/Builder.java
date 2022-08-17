@@ -9,5 +9,5 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class Builder {
     private String id;
-    private ArrayList<BuilderType> blocks;
+    private ArrayList<BuilderType> blocks = new ArrayList<>();
 }

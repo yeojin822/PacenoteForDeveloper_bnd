@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class BuilderType {
+public class BuilderType<T> {
     private String blockType;
-    private List<Object> fieldValues = new ArrayList<>();
+    private T fieldValues;
 }

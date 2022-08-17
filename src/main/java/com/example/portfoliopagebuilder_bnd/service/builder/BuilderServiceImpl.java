@@ -1,5 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
+import com.example.portfoliopagebuilder_bnd.domain.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.domain.builder.Builder;
 import com.example.portfoliopagebuilder_bnd.domain.builder.BuilderType;
 import com.example.portfoliopagebuilder_bnd.domain.builder.FieldProfile;
@@ -17,10 +18,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,58 +57,68 @@ public class BuilderServiceImpl implements BuilderService {
         //데이터
         ArrayList blocks = (ArrayList) param.get("blocks");
 
-        for (int i = 0; i < blocks.size(); i++) {
-            Map<String, Object> builderItem = mapper.convertValue(blocks.get(i), Map.class);
-            log.info("---------------------");
-            if(builderItem.get("blockType").equals("Profile")) {
-                Profile proile = mapper.convertValue(builderItem.get("fieldValues"), Profile.class);
-                proile.setUser(user);
-                log.info("set profile ::: {}", proile);
-                profileRepository.save(proile);
-            }
+        try {
+            for (int i = 0; i < blocks.size(); i++) {
+                Map<String, Object> builderItem = mapper.convertValue(blocks.get(i), Map.class);
+                log.info("---------------------");
+                if (builderItem.get("blockType").equals("Profile")) {
+                    Profile proile = mapper.convertValue(builderItem.get("fieldValues"), Profile.class);
+                    proile.setUser(user);
+                    log.info("set profile ::: {}", proile);
+                    profileRepository.save(proile);
+                }
 
-            if(builderItem.get("blockType").equals("Project")) {
-                Project project = mapper.convertValue(builderItem.get("fieldValues"), Project.class);
-                project.setUser(user);
-                log.info("set Project ::: {}", project);
-                projectRepository.save(project);
-            }
+                if (builderItem.get("blockType").equals("Project")) {
+                    Project project = mapper.convertValue(builderItem.get("fieldValues"), Project.class);
+                    project.setUser(user);
+                    log.info("set Project ::: {}", project);
+                    projectRepository.save(project);
+                }
 
-            if(builderItem.get("blockType").equals("Career")) {
-                Career career = mapper.convertValue(builderItem.get("fieldValues"), Career.class);
-                career.setUser(user);
-                log.info("set Career ::: {}", career);
-                careerRepository.save(career);
-            }
+                if (builderItem.get("blockType").equals("Career")) {
+                    Career career = mapper.convertValue(builderItem.get("fieldValues"), Career.class);
+                    career.setUser(user);
+                    log.info("set Career ::: {}", career);
+                    careerRepository.save(career);
+                }
 
-            if(builderItem.get("blockType").equals("Portfolio")) {
-                Portfolio portfolio = mapper.convertValue(builderItem.get("fieldValues"), Portfolio.class);
-                portfolio.setUser(user);
-                log.info("set Portfolio ::: {}", portfolio);
-                portfolioRepository.save(portfolio);
-            }
+                if (builderItem.get("blockType").equals("Portfolio")) {
+                    Portfolio portfolio = mapper.convertValue(builderItem.get("fieldValues"), Portfolio.class);
+                    portfolio.setUser(user);
+                    log.info("set Portfolio ::: {}", portfolio);
+                    portfolioRepository.save(portfolio);
+                }
 
+            }
+        }catch (Exception e){
+            log.error("insert error :: {}", e.getStackTrace().toString());
+            return false;
         }
-
         return true;
     }
 
     @Override
     public ResponseEntity<?> detail(String id) throws Exception{
+        BaseResponse<Builder> res = new BaseResponse();
+        //공통부분
         ObjectMapper objectMapper = new ObjectMapper();
         Builder builder = new Builder();
         builder.setId(id);
 
-        BuilderType builderType = new BuilderType();
         log.info("id : {}", id);
-        List<FieldProfile> test = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<List<FieldProfile>>(){});
+        List<FieldProfile> test = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldProfile>>(){});
+//        List<FieldProfile> test = Arrays.asList(objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),FieldProfile[].class));
         log.info("test ::: {}", test );
-        builderType.setBlockType(test.getClass().getTypeName());
-//        builderType.setFieldValues(test);
+        for (int i = 0; i < test.size(); i++) {
+            BuilderType builderType = new BuilderType();
+            builderType.setBlockType("Profile");
+            builderType.setFieldValues(test.get(i));
+            builder.getBlocks().add(builderType);
+        }
 
-        log.info("상태 체크 :: {}", builderType);
+        res.setBody(builder);
 
-        return null;
+        return  new ResponseEntity(res, HttpStatus.OK);
     }
 
     @Override
