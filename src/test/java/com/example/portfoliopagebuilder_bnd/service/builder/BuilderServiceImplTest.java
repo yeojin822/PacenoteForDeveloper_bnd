@@ -1,10 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
 import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.CareerRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.PortfolioRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.ProfileRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.ProjectRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +27,9 @@ class BuilderServiceImplTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    BlockRepository blockRepository;
 
     private BuilderService builderService;
     String profile = "{\n" +
@@ -170,7 +170,7 @@ class BuilderServiceImplTest {
             "}";
     @BeforeEach
     public void setup(){
-        builderService = new BuilderServiceImpl(projectRepository, portfolioRepository, profileRepository, careerRepository, userRepository);
+        builderService = new BuilderServiceImpl(projectRepository, portfolioRepository, profileRepository, careerRepository, userRepository, blockRepository);
     }
 
     @Test

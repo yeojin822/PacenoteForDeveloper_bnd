@@ -3,15 +3,9 @@ package com.example.portfoliopagebuilder_bnd.service.builder;
 import com.example.portfoliopagebuilder_bnd.domain.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.domain.builder.*;
 import com.example.portfoliopagebuilder_bnd.model.User;
-import com.example.portfoliopagebuilder_bnd.model.builder.Career;
-import com.example.portfoliopagebuilder_bnd.model.builder.Portfolio;
-import com.example.portfoliopagebuilder_bnd.model.builder.Profile;
-import com.example.portfoliopagebuilder_bnd.model.builder.Project;
+import com.example.portfoliopagebuilder_bnd.model.builder.*;
 import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.CareerRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.PortfolioRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.ProfileRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.ProjectRepository;
+import com.example.portfoliopagebuilder_bnd.repository.builder.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -32,15 +23,17 @@ public class BuilderServiceImpl implements BuilderService {
     ProjectRepository projectRepository;
     PortfolioRepository portfolioRepository;
     ProfileRepository profileRepository;
+    BlockRepository blockRepository;
     CareerRepository careerRepository;
     UserRepository userRepository;
 
     @Autowired
-    public BuilderServiceImpl(ProjectRepository projectRepository, PortfolioRepository portfolioRepository, ProfileRepository profileRepository, CareerRepository careerRepository, UserRepository userRepository){
+    public BuilderServiceImpl(ProjectRepository projectRepository, PortfolioRepository portfolioRepository, ProfileRepository profileRepository, CareerRepository careerRepository, UserRepository userRepository,BlockRepository blockRepository){
         this.careerRepository = careerRepository;
         this.projectRepository = projectRepository;
         this.portfolioRepository = portfolioRepository;
         this.profileRepository = profileRepository;
+        this.blockRepository = blockRepository;
         this.userRepository = userRepository;
     }
 
@@ -58,36 +51,39 @@ public class BuilderServiceImpl implements BuilderService {
         try {
             for (int i = 0; i < blocks.size(); i++) {
                 Map<String, Object> builderItem = mapper.convertValue(blocks.get(i), Map.class);
-                log.info("---------------------");
                 if (builderItem.get("blockType").equals("Profile")) {
                     Profile proile = mapper.convertValue(builderItem.get("fieldValues"), Profile.class);
                     proile.setUser(user);
-                    log.info("set profile ::: {}", proile);
                     profileRepository.save(proile);
                 }
 
                 if (builderItem.get("blockType").equals("Project")) {
                     Project project = mapper.convertValue(builderItem.get("fieldValues"), Project.class);
                     project.setUser(user);
-                    log.info("set Project ::: {}", project);
                     projectRepository.save(project);
                 }
 
                 if (builderItem.get("blockType").equals("Career")) {
                     Career career = mapper.convertValue(builderItem.get("fieldValues"), Career.class);
                     career.setUser(user);
-                    log.info("set Career ::: {}", career);
                     careerRepository.save(career);
                 }
 
                 if (builderItem.get("blockType").equals("Portfolio")) {
                     Portfolio portfolio = mapper.convertValue(builderItem.get("fieldValues"), Portfolio.class);
                     portfolio.setUser(user);
-                    log.info("set Portfolio ::: {}", portfolio);
                     portfolioRepository.save(portfolio);
                 }
 
             }
+            //blockLayout, blockLayoutStyle set
+            Block block = new Block();
+            block.setUser(user);
+            block.setBlockLayout(mapper.convertValue(param.get("blockLayout"),ArrayList.class));
+            block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+            log.info("set block ::: {}", block);
+            blockRepository.save(block);
+
         }catch (Exception e){
             log.error("insert error :: {}", e.getStackTrace().toString());
             return false;
@@ -107,6 +103,7 @@ public class BuilderServiceImpl implements BuilderService {
         List<FieldCareer> careers = objectMapper.convertValue(careerRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldCareer>>(){});
         List<FieldProject> projects = objectMapper.convertValue(projectRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldProject>>(){});
         List<FieldPortfolio> portfolios = objectMapper.convertValue(portfolioRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldPortfolio>>(){});
+        Block block = blockRepository.findByUserId_Id(id);
 
         if(profiles.size() > 0) {
             for (int i = 0; i < profiles.size(); i++) {
@@ -143,7 +140,14 @@ public class BuilderServiceImpl implements BuilderService {
                 builder.getBlocks().add(builderType);
             }
         }
+        if(block != null) {
+            log.info("block test ::: {}", block);
+           builder.setBlockLayout(objectMapper.convertValue(block.getBlockLayout(), ArrayList.class));
+           builder.setBlockTypeStyle(objectMapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
 
+           // builder.setBlockTypeStyle(objectMapper.convertValue(block.getBlockTypeStyle(),Map.class));
+            //builder.setBlockTypeStyle(block.getBlockTypeStyle());
+        }
         res.setBody(builder);
 
         return  new ResponseEntity(res, HttpStatus.OK);

@@ -24,21 +24,20 @@ public class BuilderController {
         this.builderService = builderService;
     }
 
-    @PostMapping("/{userId}")
-    @ResponseBody
-    public ResponseEntity<?> updateBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
-        return builderService.updateBuilder(param);
-    }
+//    @PutMapping("/{userId}")
+//    @ResponseBody
+//    public ResponseEntity<?> updateBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
+//        return builderService.updateBuilder(param);
+//    }
 
 
     @PostMapping("/save")
     @ResponseBody
-    public boolean saveBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
+    public boolean save(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
         return builderService.testSave(param);
     }
 
     @GetMapping("/{userId}")
-    @ResponseBody
     public ResponseEntity<?> detail(@PathVariable String userId) throws Exception {
         return builderService.detail(userId);
     }
