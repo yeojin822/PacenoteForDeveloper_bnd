@@ -1,9 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
 import com.example.portfoliopagebuilder_bnd.domain.BaseResponse;
-import com.example.portfoliopagebuilder_bnd.domain.builder.Builder;
-import com.example.portfoliopagebuilder_bnd.domain.builder.BuilderType;
-import com.example.portfoliopagebuilder_bnd.domain.builder.FieldProfile;
+import com.example.portfoliopagebuilder_bnd.domain.builder.*;
 import com.example.portfoliopagebuilder_bnd.model.User;
 import com.example.portfoliopagebuilder_bnd.model.builder.Career;
 import com.example.portfoliopagebuilder_bnd.model.builder.Portfolio;
@@ -105,15 +103,45 @@ public class BuilderServiceImpl implements BuilderService {
         Builder builder = new Builder();
         builder.setId(id);
 
-        log.info("id : {}", id);
-        List<FieldProfile> test = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldProfile>>(){});
-//        List<FieldProfile> test = Arrays.asList(objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),FieldProfile[].class));
-        log.info("test ::: {}", test );
-        for (int i = 0; i < test.size(); i++) {
-            BuilderType builderType = new BuilderType();
-            builderType.setBlockType("Profile");
-            builderType.setFieldValues(test.get(i));
-            builder.getBlocks().add(builderType);
+        List<FieldProfile> profiles = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldProfile>>(){});
+        List<FieldCareer> careers = objectMapper.convertValue(careerRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldCareer>>(){});
+        List<FieldProject> projects = objectMapper.convertValue(projectRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldProject>>(){});
+        List<FieldPortfolio> portfolios = objectMapper.convertValue(portfolioRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<FieldPortfolio>>(){});
+
+        if(profiles.size() > 0) {
+            for (int i = 0; i < profiles.size(); i++) {
+                BuilderType builderType = new BuilderType();
+                builderType.setBlockType("Profile");
+                builderType.setFieldValues(profiles.get(i));
+                builder.getBlocks().add(builderType);
+            }
+        }
+
+        if(careers.size() > 0) {
+            for (int i = 0; i < careers.size(); i++) {
+                BuilderType builderType = new BuilderType();
+                builderType.setBlockType("Career");
+                builderType.setFieldValues(careers.get(i));
+                builder.getBlocks().add(builderType);
+            }
+        }
+
+        if(projects.size() > 0) {
+            for (int i = 0; i < projects.size(); i++) {
+                BuilderType builderType = new BuilderType();
+                builderType.setBlockType("Project");
+                builderType.setFieldValues(projects.get(i));
+                builder.getBlocks().add(builderType);
+            }
+        }
+
+        if(portfolios.size() > 0) {
+            for (int i = 0; i < portfolios.size(); i++) {
+                BuilderType builderType = new BuilderType();
+                builderType.setBlockType("Portfolio");
+                builderType.setFieldValues(portfolios.get(i));
+                builder.getBlocks().add(builderType);
+            }
         }
 
         res.setBody(builder);
