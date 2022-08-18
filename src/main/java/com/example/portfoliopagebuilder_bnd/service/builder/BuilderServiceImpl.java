@@ -38,7 +38,7 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
     @Override
-    public boolean testSave(Map<String, Object> param) throws Exception{
+    public boolean save(Map<String, Object> param) throws Exception{
         log.info("testSave ::: {}", param);
         ObjectMapper mapper = new ObjectMapper();
 
@@ -76,14 +76,21 @@ public class BuilderServiceImpl implements BuilderService {
                 }
 
             }
-            //blockLayout, blockLayoutStyle set
-            Block block = new Block();
-            block.setUser(user);
-            block.setBlockLayout(mapper.convertValue(param.get("blockLayout"),ArrayList.class));
-            block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
-            log.info("set block ::: {}", block);
-            blockRepository.save(block);
 
+            //blockLayout, blockLayoutStyle set
+            Block block = blockRepository.findByUserId_Id(user.getId());
+            if(block != null) {
+                // 저장된 block 이 있으면 update
+                block.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
+                block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+                blockRepository.save(block);
+             }else{
+                Block newBlock = new Block();
+                block.setUser(user);
+                block.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
+                block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+                blockRepository.save(newBlock);
+            }
         }catch (Exception e){
             log.error("insert error :: {}", e.getStackTrace().toString());
             return false;
@@ -144,9 +151,6 @@ public class BuilderServiceImpl implements BuilderService {
             log.info("block test ::: {}", block);
            builder.setBlockLayout(objectMapper.convertValue(block.getBlockLayout(), ArrayList.class));
            builder.setBlockTypeStyle(objectMapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
-
-           // builder.setBlockTypeStyle(objectMapper.convertValue(block.getBlockTypeStyle(),Map.class));
-            //builder.setBlockTypeStyle(block.getBlockTypeStyle());
         }
         res.setBody(builder);
 

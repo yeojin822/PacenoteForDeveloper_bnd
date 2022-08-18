@@ -42,7 +42,7 @@ public class BuilderController {
     @Operation(summary = "빌더 정보 저장", description = "사용자 builder 정보 저장")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     public boolean save(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
-        return builderService.testSave(param);
+        return builderService.save(param);
     }
 
     @GetMapping("/builder/{id}")
