@@ -4,6 +4,7 @@ import com.example.portfoliopagebuilder_bnd.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public class Portfolio implements Serializable {
 
     @CreationTimestamp
     private Timestamp writeDate;
-
+    @UpdateTimestamp
     private Timestamp modifyDate;
 
 }

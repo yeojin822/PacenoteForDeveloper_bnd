@@ -6,6 +6,7 @@ import com.example.portfoliopagebuilder_bnd.util.StringListConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -48,6 +49,8 @@ public class Project  implements Serializable {
 
     @CreationTimestamp
     private Timestamp writeDate;
+
+    @UpdateTimestamp
     private Timestamp modifyDate;
 
 }
