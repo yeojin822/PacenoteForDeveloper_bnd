@@ -48,6 +48,7 @@ public class Project  implements Serializable {
     private List<String> projectSkillSet;
 
     @CreationTimestamp
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
     @UpdateTimestamp

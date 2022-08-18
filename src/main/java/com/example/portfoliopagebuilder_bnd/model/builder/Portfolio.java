@@ -38,7 +38,9 @@ public class Portfolio implements Serializable {
     private String portfolioURL;
 
     @CreationTimestamp
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
+
     @UpdateTimestamp
     private Timestamp modifyDate;
 

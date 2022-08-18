@@ -69,6 +69,7 @@ public class Profile implements Serializable {
     private String profileKeyword5;
 
     @CreationTimestamp
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
     @UpdateTimestamp

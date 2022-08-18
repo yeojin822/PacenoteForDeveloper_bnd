@@ -33,5 +33,6 @@ public class Block {
     private LinkedHashMap<String,Object> blockTypeStyle;
 
     @CreationTimestamp
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 }

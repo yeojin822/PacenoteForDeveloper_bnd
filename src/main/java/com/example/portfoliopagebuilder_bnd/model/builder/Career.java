@@ -39,6 +39,7 @@ public class Career implements Serializable {
     private Term careerTerm;
 
     @CreationTimestamp
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
     @UpdateTimestamp
     private Timestamp modifyDate;
