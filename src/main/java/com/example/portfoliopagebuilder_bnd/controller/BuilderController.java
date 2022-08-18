@@ -2,7 +2,13 @@ package com.example.portfoliopagebuilder_bnd.controller;
 
 import com.example.portfoliopagebuilder_bnd.service.builder.BuilderService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,9 +19,9 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/builder")
+@RequestMapping("/api")
 @Slf4j
-@OpenAPIDefinition(info = @Info(title = "builder", description = "테스트 builder"))
+@Tag(name="builder", description = "builder-controller")
 public class BuilderController {
     BuilderService builderService;
 
@@ -31,15 +37,19 @@ public class BuilderController {
 //    }
 
 
-    @PostMapping("/save")
+    @PostMapping("/builder")
     @ResponseBody
+    @Operation(summary = "빌더 정보 저장", description = "사용자 builder 정보 저장")
+    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     public boolean save(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
         return builderService.testSave(param);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> detail(@PathVariable String userId) throws Exception {
-        return builderService.detail(userId);
+    @GetMapping("/builder/{id}")
+    @Operation(summary = "빌더 정보 조회", description = "사용자 id 로 등록된 모든 builder 정보 조회")
+    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
+    public ResponseEntity<?> detail(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
+        return builderService.detail(id);
     }
 
 }
