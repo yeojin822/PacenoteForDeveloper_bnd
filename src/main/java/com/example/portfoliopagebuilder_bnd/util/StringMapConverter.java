@@ -18,7 +18,6 @@ public class StringMapConverter implements AttributeConverter<Map, String> {
 
     @Override
     public String convertToDatabaseColumn(Map attribute) {
-        log.info("test LLLLLL {}", attribute);
         try {
             return mapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {

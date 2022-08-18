@@ -86,9 +86,9 @@ public class BuilderServiceImpl implements BuilderService {
                 blockRepository.save(block);
              }else{
                 Block newBlock = new Block();
-                block.setUser(user);
-                block.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
-                block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+                newBlock.setUser(user);
+                newBlock.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
+                newBlock.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
                 blockRepository.save(newBlock);
             }
         }catch (Exception e){
