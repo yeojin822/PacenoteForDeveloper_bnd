@@ -10,7 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FieldProject {
-    private Long idx;
+    private Long id;
+    private String block_idx;
     private String projectName;
     private String projectOrganigation;
     private String projectDescription;

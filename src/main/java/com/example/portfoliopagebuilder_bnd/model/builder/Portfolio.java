@@ -21,9 +21,9 @@ public class Portfolio implements Serializable {
     private User user;
 
     @Id
-    @Column(name = "idx")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Long id;
 
     @Column(name = "image1")
     private String portfolioThumbnail;
@@ -36,6 +36,9 @@ public class Portfolio implements Serializable {
 
     @Column(name = "link1")
     private String portfolioURL;
+
+    @Column(name = "block_idx")
+    private String blockIdx;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)

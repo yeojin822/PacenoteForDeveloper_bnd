@@ -20,9 +20,9 @@ public class Block {
     private User user;
 
     @Id
-    @Column(name = "idx")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Long id;
 
     @Column(name = "block_layout", columnDefinition = "JSON")
     @Convert(converter = StringListConverter.class)

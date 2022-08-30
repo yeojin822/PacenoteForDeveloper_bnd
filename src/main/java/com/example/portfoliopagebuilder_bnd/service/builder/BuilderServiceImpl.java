@@ -19,6 +19,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 public class BuilderServiceImpl implements BuilderService {
 
     ProjectRepository projectRepository;
@@ -39,7 +40,6 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
     @Override
-    @Transactional
     public boolean save(Map<String, Object> param) throws Exception{
         log.info("testSave ::: {}", param);
         ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +94,8 @@ public class BuilderServiceImpl implements BuilderService {
                 blockRepository.save(newBlock);
             }
         }catch (Exception e){
-            log.error("insert error :: {}", e.getStackTrace().toString());
+            log.error("insert error :: {}", e.getStackTrace());
+            log.error("insert error :: {}", e.getMessage());
             return false;
         }
         return true;

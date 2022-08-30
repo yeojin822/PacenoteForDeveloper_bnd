@@ -22,9 +22,9 @@ public class Career implements Serializable {
     private User user;
 
     @Id
-    @Column(name = "idx")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Long id;
 
     @Column(name = "text1")
     private String careerMainText;
@@ -37,6 +37,9 @@ public class Career implements Serializable {
 
     @Embedded
     private Term careerTerm;
+
+    @Column(name = "block_idx")
+    private String blockIdx;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)

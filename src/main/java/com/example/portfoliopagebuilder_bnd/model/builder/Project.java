@@ -24,9 +24,9 @@ public class Project  implements Serializable {
     private User user;
 
     @Id
-    @Column(name = "idx")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Long id;
 
     @Column(name = "text1")
     private String projectName;
@@ -46,6 +46,9 @@ public class Project  implements Serializable {
     @Column(name = "text5", columnDefinition = "JSON")
     @Convert(converter = StringListConverter.class)
     private List<String> projectSkillSet;
+
+    @Column(name = "block_idx")
+    private String blockIdx;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)
