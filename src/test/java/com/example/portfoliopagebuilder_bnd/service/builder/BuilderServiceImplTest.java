@@ -1,60 +1,48 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
+import com.example.portfoliopagebuilder_bnd.model.User;
 import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
+@ExtendWith(MockitoExtension.class)
 class BuilderServiceImplTest {
-
     @Mock
     ProjectRepository projectRepository;
-
     @Mock
     PortfolioRepository portfolioRepository;
-
     @Mock
     ProfileRepository profileRepository;
-
     @Mock
     CareerRepository careerRepository;
-
     @Mock
     UserRepository userRepository;
-
     @Mock
     BlockRepository blockRepository;
 
-    private BuilderService builderService;
-    String profile = "{\n" +
-            "  \"id\": \"kakao_test\",\n" +
-        "      \"blockType\": \"Profile\",\n" +
-        "      \"fieldValues\": {\n" +
-        "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
-        "        \"profileMainText\": \"Front End Developer\",\n" +
-        "        \"profileSubText\": \"안녕하세요 :) 서핏 팀의 \\n디자이너 박소연입니다.\",\n" +
-        "        \"profileAdditionalInfo\": \"apply\",\n" +
-        "        \"profileApplyCompany\": \"당근마켓\",\n" +
-        "        \"profileApplyPosition\": \"Front End\",\n" +
-        "        \"profilePhoneNumber\": \"010-3734-1715\",\n" +
-        "        \"profileEmail\": \"ket8780@gmail.com\",\n" +
-        "        \"profileGitHubURL\": \"https://github.com/choiseunghyeon\",\n" +
-        "        \"profileKeyword1\": \"근명\",\n" +
-        "        \"profileKeyword2\": \"성실\",\n" +
-        "        \"profileKeyword3\": \"책임\",\n" +
-        "        \"profileKeyword4\": \"개발\",\n" +
-        "        \"profileKeyword5\": \"혁신\"\n" +
-        "      }\n" +
-            "}";
+    @InjectMocks
+    private BuilderServiceImpl builderService;
 
     String json = "{\n" +
-            "  \"id\": 1,\n" +
+            "  \"id\": \"kakao_2224182301\",\n" +
             "  \"blocks\": [\n" +
             "    {\n" +
             "      \"blockType\": \"Profile\",\n" +
@@ -166,27 +154,55 @@ class BuilderServiceImplTest {
             "        \"markdownText\": \"# Multi Project Extension 제작 회고 \\n ## 제작 동기 \\n 현재 다니고 있는 ECount 회사는 Client/Server Framework를 자체 제작해서 사용한다.  \\n신규 Framework를 제작 중인데 핵심 개념은 모듈화다.  \"\n" +
             "      }\n" +
             "    }\n" +
-            "  ]\n" +
+            "  ],\n" +
+            "  \"blockLayout\": [[{ \"blockType\": \"Profile\" }], [{ \"blockType\": \"Project\" }], [{ \"blockType\": \"Portfolio\" }, { \"blockType\": \"Career\" }], [{ \"blockType\": \"MarkDown\" }]],\n" +
+            "  \"blockTypeStyle\": {\n" +
+            "    \"Profile\": {\n" +
+            "      \"layoutType\": \"default\",\n" +
+            "      \"columnCount\": 1\n" +
+            "    },\n" +
+            "    \"Project\": {\n" +
+            "      \"layoutType\": \"default\",\n" +
+            "      \"columnCount\": 2\n" +
+            "    },\n" +
+            "    \"Career\": {\n" +
+            "      \"layoutType\": \"default\",\n" +
+            "      \"columnCount\": 1\n" +
+            "    },\n" +
+            "    \"Portfolio\": {\n" +
+            "      \"layoutType\": \"default\",\n" +
+            "      \"columnCount\": 4\n" +
+            "    },\n" +
+            "    \"MarkDown\": {\n" +
+            "      \"layoutType\": \"default\",\n" +
+            "      \"columnCount\": 1\n" +
+            "    }\n" +
+            "  }\n" +
             "}";
-    @BeforeEach
-    public void setup(){
-        builderService = new BuilderServiceImpl(projectRepository, portfolioRepository, profileRepository, careerRepository, userRepository, blockRepository);
-    }
 
     @Test
-    void updateBuilder() throws Exception {
-         ObjectMapper mapper = new ObjectMapper();
-        assertThat(builderService.updateBuilder(mapper.readValue(json, Map.class))).isEqualTo(true);
-    }
-
-    @Test
-    void testSave() throws Exception {
+    @DisplayName("빌더 저장하기")
+    void 저장하기() throws Exception {
+        //given
+        User testUser = User.builder().id("kakao_2224182301").build();
+        given(userRepository.getById(any())).willReturn(testUser);
         ObjectMapper mapper = new ObjectMapper();
-        assertThat(builderService.testSave(mapper.readValue(profile, Map.class))).isEqualTo(true);
+        Map map = mapper.readValue(json, Map.class);
+
+        //when
+        boolean save = builderService.save(map);
+
+        //then
+        assertThat(save).isEqualTo(true);
     }
 
     @Test
-    void select() throws Exception {
-        assertThat(builderService.detail("kakao_2224182301")).isEqualTo(null);
+    @DisplayName("빌더 조회하기")
+    void 조회하기() throws Exception {
+        //when
+        ResponseEntity<?> save = builderService.detail("kakao_2224182301");
+        System.out.println("save = " + save);
     }
+
+
 }

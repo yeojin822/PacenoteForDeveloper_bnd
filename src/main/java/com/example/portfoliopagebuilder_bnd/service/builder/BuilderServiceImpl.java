@@ -94,7 +94,6 @@ public class BuilderServiceImpl implements BuilderService {
                 blockRepository.save(newBlock);
             }
         }catch (Exception e){
-            log.error("insert error :: {}", e.getStackTrace());
             log.error("insert error :: {}", e.getMessage());
             return false;
         }
