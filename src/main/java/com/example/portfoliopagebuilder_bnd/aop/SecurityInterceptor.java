@@ -17,16 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class SecurityInterceptor implements HandlerInterceptor {
 
-    private JwtTokenProvider jwtTokenProvider;
-
     @Value("${token.devKey}")
     private String devKey;
 
-    @Autowired
-    private Environment environment;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final Environment environment;
 
-    public SecurityInterceptor(JwtTokenProvider jwtTokenProvider) {
+    public SecurityInterceptor(JwtTokenProvider jwtTokenProvider, Environment environment) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.environment = environment;
     }
 
     @Override

@@ -1,13 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.domain.builder;
 
-import com.example.portfoliopagebuilder_bnd.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor

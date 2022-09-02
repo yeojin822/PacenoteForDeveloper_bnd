@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,21 +23,9 @@ import java.util.Map;
 @RequestMapping("/api")
 @Slf4j
 @Tag(name="builder", description = "builder-controller")
+@RequiredArgsConstructor
 public class BuilderController {
-    BuilderService builderService;
-
-    @Autowired
-    public BuilderController(BuilderService builderService) {
-        this.builderService = builderService;
-    }
-
-//    @PutMapping("/{userId}")
-//    @ResponseBody
-//    public ResponseEntity<?> updateBuilder(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
-//        return builderService.updateBuilder(param);
-//    }
-
-
+    private final BuilderService builderService;
 
     @Operation(summary = "빌더 정보 저장", description = "사용자 builder 정보 저장")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))

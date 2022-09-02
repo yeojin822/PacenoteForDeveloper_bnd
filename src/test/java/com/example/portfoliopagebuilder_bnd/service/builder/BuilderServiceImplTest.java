@@ -4,18 +4,12 @@ import com.example.portfoliopagebuilder_bnd.model.User;
 import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -196,13 +190,6 @@ class BuilderServiceImplTest {
         assertThat(save).isEqualTo(true);
     }
 
-    @Test
-    @DisplayName("빌더 조회하기")
-    void 조회하기() throws Exception {
-        //when
-        ResponseEntity<?> save = builderService.detail("kakao_2224182301");
-        System.out.println("save = " + save);
-    }
 
 
 }

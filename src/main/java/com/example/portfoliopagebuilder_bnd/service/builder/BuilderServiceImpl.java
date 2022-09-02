@@ -8,6 +8,7 @@ import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
 import com.example.portfoliopagebuilder_bnd.repository.builder.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,25 +20,16 @@ import java.util.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class BuilderServiceImpl implements BuilderService {
 
-    ProjectRepository projectRepository;
-    PortfolioRepository portfolioRepository;
-    ProfileRepository profileRepository;
-    BlockRepository blockRepository;
-    CareerRepository careerRepository;
-    UserRepository userRepository;
-
-    @Autowired
-    public BuilderServiceImpl(ProjectRepository projectRepository, PortfolioRepository portfolioRepository, ProfileRepository profileRepository, CareerRepository careerRepository, UserRepository userRepository,BlockRepository blockRepository){
-        this.careerRepository = careerRepository;
-        this.projectRepository = projectRepository;
-        this.portfolioRepository = portfolioRepository;
-        this.profileRepository = profileRepository;
-        this.blockRepository = blockRepository;
-        this.userRepository = userRepository;
-    }
+    private final ProjectRepository projectRepository;
+    private final PortfolioRepository portfolioRepository;
+    private final ProfileRepository profileRepository;
+    private final BlockRepository blockRepository;
+    private final CareerRepository careerRepository;
+    private final UserRepository userRepository;
 
     @Override
     public boolean save(Map<String, Object> param) throws Exception{
@@ -157,23 +149,5 @@ public class BuilderServiceImpl implements BuilderService {
         res.setBody(builder);
 
         return  new ResponseEntity(res, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<?> updateBuilder(Map<String, Object> param) throws Exception {
-        log.info("id  ::: {}", param.get("id"));
-        ArrayList blocks = (ArrayList) param.get("blocks");
-        ObjectMapper mapper = new ObjectMapper();
-
-
-        for (int i = 0; i < blocks.size(); i++) {
-            Map<String, Object> test = mapper.convertValue(blocks.get(i), Map.class);
-            System.out.println(test.get("blockType"));
-            System.out.println(test);
-            System.out.println("---------------------");
-
-        }
-
-        return null;
     }
 }
