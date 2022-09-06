@@ -1,8 +1,9 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
-import com.example.portfoliopagebuilder_bnd.model.User;
-import com.example.portfoliopagebuilder_bnd.repository.UserRepository;
-import com.example.portfoliopagebuilder_bnd.repository.builder.*;
+import com.example.portfoliopagebuilder_bnd.builder.repository.*;
+import com.example.portfoliopagebuilder_bnd.builder.service.BuilderServiceImpl;
+import com.example.portfoliopagebuilder_bnd.login.model.User;
+import com.example.portfoliopagebuilder_bnd.login.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
