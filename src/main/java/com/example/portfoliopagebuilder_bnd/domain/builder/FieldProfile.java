@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FieldProfile {
-    private Long id;
-    private String block_idx;
     private String profileImage;
     private String profileMainText;
     private String profileSubText;

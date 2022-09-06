@@ -38,8 +38,8 @@ public class Career implements Serializable {
     @Embedded
     private Term careerTerm;
 
-    @Column(name = "block_idx")
-    private String blockIdx;
+    @Column(name = "idx")
+    private String idx;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)

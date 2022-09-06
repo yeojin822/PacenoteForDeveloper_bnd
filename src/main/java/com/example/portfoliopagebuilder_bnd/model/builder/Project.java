@@ -47,8 +47,8 @@ public class Project  implements Serializable {
     @Convert(converter = StringListConverter.class)
     private List<String> projectSkillSet;
 
-    @Column(name = "block_idx")
-    private String blockIdx;
+    @Column(name = "idx")
+    private String idx;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)

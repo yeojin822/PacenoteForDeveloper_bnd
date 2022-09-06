@@ -7,5 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BuilderType<T> {
     private String blockType;
+    private Long id;
+    private String idx;
     private T fieldValues;
 }

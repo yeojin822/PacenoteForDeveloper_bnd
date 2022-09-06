@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FieldPortfolio {
-    private Long id;
-    private String block_idx;
     private String portfolioThumbnail;
     private String portfolioName;
     private String portfolioDescription;
