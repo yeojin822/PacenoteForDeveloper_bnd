@@ -10,9 +10,9 @@ spring:
   application:
     name: PortfolioPageBuilder
   config:
-    import: configserver:${config_url}
+    import: configserver:${config_url} #ec2 주소 config 포트
   profiles:
-    active: local
+    active: dev
 
 logging:
   level:
