@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface BuilderService {
     ResponseEntity<?> detail(String id) throws Exception;
-    boolean save(Builder param) throws Exception;
+    ResponseEntity<?> save(Builder param) throws Exception;
 }

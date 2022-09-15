@@ -33,7 +33,7 @@ public class BuilderServiceImpl implements BuilderService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean save(Builder param) throws Exception{
+    public ResponseEntity<?> save(Builder param) throws Exception{
         log.info("testSave ::: {}", param);
         ObjectMapper mapper = new ObjectMapper();
 
@@ -90,9 +90,9 @@ public class BuilderServiceImpl implements BuilderService {
             }
         }catch (Exception e){
             log.error("insert error :: {}", e.getMessage());
-            return false;
+            return new ResponseEntity("저장에 실패하였습니다.", HttpStatus.BAD_REQUEST);
         }
-        return true;
+        return new ResponseEntity("ok",HttpStatus.OK);
     }
 
     @Override

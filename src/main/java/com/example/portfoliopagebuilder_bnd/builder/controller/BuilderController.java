@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -27,7 +27,7 @@ public class BuilderController {
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     @PostMapping("/builder")
     @ResponseBody
-    public boolean save(@RequestBody Builder param, HttpSession session) throws Exception {
+    public ResponseEntity<?> save(@RequestBody @Validated Builder param, HttpSession session) throws Exception {
         return builderService.save(param);
     }
 
