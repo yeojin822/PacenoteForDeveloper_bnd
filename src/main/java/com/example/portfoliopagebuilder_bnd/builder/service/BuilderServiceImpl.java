@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -34,44 +33,42 @@ public class BuilderServiceImpl implements BuilderService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean save(Map<String, Object> param) throws Exception{
+    public boolean save(Builder param) throws Exception{
         log.info("testSave ::: {}", param);
         ObjectMapper mapper = new ObjectMapper();
 
         //유저 정보
-        User user = userRepository.getById((String) param.get("id"));
-
-        //데이터
-        ArrayList blocks = (ArrayList) param.get("blocks");
+        User user = userRepository.getById(param.getId());
 
         try {
-            for (int i = 0; i < blocks.size(); i++) {
-                Map<String, Object> builderItem = mapper.convertValue(blocks.get(i), Map.class);
-                if (builderItem.get("blockType").equals("Profile")) {
-                    Profile profile = mapper.convertValue(builderItem.get("fieldValues"), Profile.class);
+            for (int i = 0; i < param.getBlocks().size(); i++) {
+                BuilderType builderItem = param.getBlocks().get(i);
+
+                if (builderItem.getBlockType().equals("Profile")) {
+                    Profile profile = mapper.convertValue(builderItem.getFieldValues(), Profile.class);
                     profile.setUser(user);
-                    profile.setIdx((String) builderItem.get("idx"));
+                    profile.setIdx(builderItem.getIdx());
                     profileRepository.save(profile);
                 }
 
-                if (builderItem.get("blockType").equals("Project")) {
-                    Project project = mapper.convertValue(builderItem.get("fieldValues"), Project.class);
+                if (builderItem.getBlockType().equals("Project")) {
+                    Project project = mapper.convertValue(builderItem.getFieldValues(), Project.class);
                     project.setUser(user);
-                    project.setIdx((String) builderItem.get("idx"));
+                    project.setIdx(builderItem.getIdx());
                     projectRepository.save(project);
                 }
 
-                if (builderItem.get("blockType").equals("Career")) {
-                    Career career = mapper.convertValue(builderItem.get("fieldValues"), Career.class);
+                if (builderItem.getBlockType().equals("Career")) {
+                    Career career = mapper.convertValue(builderItem.getFieldValues(), Career.class);
                     career.setUser(user);
-                    career.setIdx((String) builderItem.get("idx"));
+                    career.setIdx(builderItem.getIdx());
                     careerRepository.save(career);
                 }
 
-                if (builderItem.get("blockType").equals("Portfolio")) {
-                    Portfolio portfolio = mapper.convertValue(builderItem.get("fieldValues"), Portfolio.class);
+                if (builderItem.getBlockType().equals("Portfolio")) {
+                    Portfolio portfolio = mapper.convertValue(builderItem.getFieldValues(), Portfolio.class);
                     portfolio.setUser(user);
-                    portfolio.setIdx((String) builderItem.get("idx"));
+                    portfolio.setIdx(builderItem.getIdx());
                     portfolioRepository.save(portfolio);
                 }
 
@@ -81,14 +78,14 @@ public class BuilderServiceImpl implements BuilderService {
             Block block = blockRepository.findByUserId_Id(user.getId());
             if(block != null) {
                 // 저장된 block 이 있으면 update
-                block.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
-                block.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+                block.setBlockLayout(param.getBlockLayout());
+                block.setBlockTypeStyle(param.getBlockTypeStyle());
                 blockRepository.save(block);
              }else{
                 Block newBlock = new Block();
                 newBlock.setUser(user);
-                newBlock.setBlockLayout(mapper.convertValue(param.get("blockLayout"), ArrayList.class));
-                newBlock.setBlockTypeStyle(mapper.convertValue(param.get("blockTypeStyle"), LinkedHashMap.class));
+                newBlock.setBlockLayout(param.getBlockLayout());
+                newBlock.setBlockTypeStyle(param.getBlockTypeStyle());
                 blockRepository.save(newBlock);
             }
         }catch (Exception e){

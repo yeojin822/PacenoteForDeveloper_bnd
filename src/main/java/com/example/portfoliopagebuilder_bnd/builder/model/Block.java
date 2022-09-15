@@ -26,7 +26,7 @@ public class Block {
 
     @Column(name = "block_layout", columnDefinition = "JSON")
     @Convert(converter = StringListConverter.class)
-    private List<String> blockLayout;
+    private List<Object> blockLayout;
 
     @Column(name = "block_style",columnDefinition = "JSON")
     @Convert(converter = StringMapConverter.class)

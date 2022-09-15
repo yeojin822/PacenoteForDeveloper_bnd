@@ -1,5 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.builder.controller;
 
+import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +27,7 @@ public class BuilderController {
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     @PostMapping("/builder")
     @ResponseBody
-    public boolean save(@RequestBody Map<String, Object> param, HttpSession session) throws Exception {
+    public boolean save(@RequestBody Builder param, HttpSession session) throws Exception {
         return builderService.save(param);
     }
 
