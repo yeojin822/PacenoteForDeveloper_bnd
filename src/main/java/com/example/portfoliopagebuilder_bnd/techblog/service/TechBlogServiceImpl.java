@@ -24,7 +24,7 @@ public class TechBlogServiceImpl implements TechBlogService {
     }
 
     @Override
-    public ResponseEntity<?> detail(String id) throws Exception{
+    public ResponseEntity<?> getList(String id) throws Exception{
         return null;
     }
 }
