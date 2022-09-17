@@ -26,7 +26,8 @@ public class TechBlogController {
     @Operation(summary = "테크블로그 목록 조회", description = "테크블로그 목록 조회")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     @GetMapping("/tech-blog")
-    public ResponseEntity<?> getList(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
-        return techBlogService.getList(id);
+    public ResponseEntity<?> getOfficialList(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
+        return techBlogService.getTechBlogList(id);
     }
+
 }
