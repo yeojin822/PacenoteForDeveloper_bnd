@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-@Tag(name="techblog", description = "techblog-controller")
+@Tag(name="tech_blog", description = "tech_blog-controller")
 @RequiredArgsConstructor
 public class TechBlogController {
     private final TechBlogService techBlogService;

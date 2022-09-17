@@ -1,6 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.techblog.service;
 
 
+import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
+import com.example.portfoliopagebuilder_bnd.common.util.web.WebRequestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,6 @@ import java.util.*;
 @Transactional
 public class TechBlogServiceImpl implements TechBlogService {
 
-
-
     @Override
     public boolean save(Map<String, Object> param) throws Exception{
 
@@ -25,6 +25,16 @@ public class TechBlogServiceImpl implements TechBlogService {
 
     @Override
     public ResponseEntity<?> getList(String id) throws Exception{
+        return null;
+    }
+
+    public Map<?,?> getNewestTechBlogPost() throws  Exception{
+        String url = "http://localhost:8000/tech-blog/datas";
+
+        String response = WebRequestUtil.httpRequest(url, "", "GET");
+
+        // DB저장
+        // 스케줄러에 성공여부 송신
         return null;
     }
 }
