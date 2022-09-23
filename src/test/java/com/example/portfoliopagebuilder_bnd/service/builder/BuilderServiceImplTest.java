@@ -1,5 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
+import com.example.portfoliopagebuilder_bnd.builder.model.Profile;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderServiceImpl;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
@@ -12,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +39,8 @@ class BuilderServiceImplTest {
 
     @InjectMocks
     private BuilderServiceImpl builderService;
+
+    ObjectMapper mapper = new ObjectMapper();
 
     String json = "{\n" +
             "  \"id\": \"kakao_2224182301\",\n" +
@@ -179,10 +185,9 @@ class BuilderServiceImplTest {
     @DisplayName("빌더 저장하기")
     void 저장하기() throws Exception {
         //given
-        User testUser = User.builder().id("kakao_2224182301").build();
-        given(userRepository.getById(any())).willReturn(testUser);
-        ObjectMapper mapper = new ObjectMapper();
-        Map map = mapper.readValue(json, Map.class);
+//        User testUser = User.builder().id("kakao_2224182301").build();
+//        given(userRepository.getById(any())).willReturn(testUser);
+//        Map map = mapper.readValue(json, Map.class);
 
         //when
 //        boolean save = builderService.save(map);
@@ -191,6 +196,34 @@ class BuilderServiceImplTest {
 //        assertThat(save).isEqualTo(true);
     }
 
+    @Test
+    @DisplayName("빌더 조회하기")
+    void 조회하기() throws Exception {
+        String testData = "{ \"id\": \"1\",\n" +
+                    "        \"idx\": \"1\",\n" +
+                    "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
+                    "        \"profileMainText\": \"Front End Developer\",\n" +
+                    "        \"profileSubText\": \"안녕하세요 :) 서핏 팀의 \\n디자이너 박소연입니다.\",\n" +
+                    "        \"profileAdditionalInfo\": \"apply\",\n" +
+                    "        \"profileApplyCompany\": \"당근마켓\",\n" +
+                    "        \"profileApplyPosition\": \"Front End\",\n" +
+                    "        \"profilePhoneNumber\": \"010-3734-1715\",\n" +
+                    "        \"profileEmail\": \"ket8780@gmail.com\",\n" +
+                    "        \"profileGitHubURL\": \"https://github.com/choiseunghyeon\",\n" +
+                    "        \"profileKeyword1\": \"근명\",\n" +
+                    "        \"profileKeyword2\": \"성실\",\n" +
+                    "        \"profileKeyword3\": \"책임\",\n" +
+                    "        \"profileKeyword4\": \"개발\",\n" +
+                    "        \"profileKeyword5\": \"혁신\"\n" +
+                    " }";
+        //when
+        Profile testUser = mapper.readValue(testData, Profile.class);
+        List<Profile> list = new ArrayList<>();
+        list.add(testUser);
+        given(profileRepository.findAllByUserId_Id(any())).willReturn(list);
+        builderService.detail("kakao_2224182301");
+        //then
+    }
 
 
 }
