@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+spring:
+  application:
+    name: PortfolioPageBuilder
+  config:
+    import: configserver:${config_url} #ec2 주소 config 포트
+  profiles:
+    active: local
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
+
+mybatis:
+  config-location: classpath:META-INF/mybatis/mybatis-config.xml

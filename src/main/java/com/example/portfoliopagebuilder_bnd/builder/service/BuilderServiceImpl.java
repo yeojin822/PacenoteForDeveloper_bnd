@@ -1,12 +1,13 @@
 package com.example.portfoliopagebuilder_bnd.builder.service;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.*;
+import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
+import com.example.portfoliopagebuilder_bnd.builder.dto.BuilderType;
 import com.example.portfoliopagebuilder_bnd.builder.model.*;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.login.repository.UserRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -30,12 +32,15 @@ public class BuilderServiceImpl implements BuilderService {
     private final ProfileRepository profileRepository;
     private final BlockRepository blockRepository;
     private final CareerRepository careerRepository;
+    private final MarkDownRepository markDownRepository;
     private final UserRepository userRepository;
+
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public ResponseEntity<?> save(Builder param) throws Exception{
         log.info("testSave ::: {}", param);
-        ObjectMapper mapper = new ObjectMapper();
 
         //유저 정보
         User user = userRepository.getById(param.getId());
@@ -72,6 +77,12 @@ public class BuilderServiceImpl implements BuilderService {
                     portfolioRepository.save(portfolio);
                 }
 
+                if (builderItem.getBlockType().equals("MarkDown")) {
+                    MarkDown markDown = mapper.convertValue(builderItem.getFieldValues(), MarkDown.class);
+                    markDown.setUser(user);
+                    markDown.setIdx(builderItem.getIdx());
+                    markDownRepository.save(markDown);
+                }
             }
 
             //blockLayout, blockLayoutStyle set
@@ -99,70 +110,40 @@ public class BuilderServiceImpl implements BuilderService {
     public ResponseEntity<?> detail(String id) throws Exception{
         BaseResponse<Builder> res = new BaseResponse();
         //공통부분
-        ObjectMapper objectMapper = new ObjectMapper();
+
         Builder builder = new Builder();
         builder.setId(id);
 
-        List<Profile> profiles = objectMapper.convertValue(profileRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<Profile>>(){});
-        List<Career> careers = objectMapper.convertValue(careerRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<Career>>(){});
-        List<Project> projects = objectMapper.convertValue(projectRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<Project>>(){});
-        List<Portfolio> portfolios = objectMapper.convertValue(portfolioRepository.findAllByUserId_Id(id),new TypeReference<ArrayList<Portfolio>>(){});
+        makeBuilderType(builder, profileRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, careerRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, projectRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, portfolioRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, markDownRepository.findAllByUserId_Id(id));
+
         Block block = blockRepository.findByUserId_Id(id);
-
-        if(profiles.size() > 0) {
-            for (int i = 0; i < profiles.size(); i++) {
-                BuilderType builderType = new BuilderType();
-                builderType.setBlockType("Profile");
-                builderType.setId(profiles.get(i).getId());
-                builderType.setIdx(profiles.get(i).getIdx());
-                FieldProfile fieldProfile = objectMapper.convertValue(profiles.get(i), FieldProfile.class);
-                builderType.setFieldValues(fieldProfile);
-                builder.getBlocks().add(builderType);
-            }
-        }
-
-        if(careers.size() > 0) {
-            for (int i = 0; i < careers.size(); i++) {
-                BuilderType builderType = new BuilderType();
-                builderType.setBlockType("Career");
-                builderType.setId(careers.get(i).getId());
-                builderType.setIdx(careers.get(i).getIdx());
-                FieldCareer fieldCareer = objectMapper.convertValue(careers.get(i), FieldCareer.class);
-                builderType.setFieldValues(fieldCareer);
-                builder.getBlocks().add(builderType);
-            }
-        }
-
-        if(projects.size() > 0) {
-            for (int i = 0; i < projects.size(); i++) {
-                BuilderType builderType = new BuilderType();
-                builderType.setBlockType("Project");
-                builderType.setId(projects.get(i).getId());
-                builderType.setIdx(projects.get(i).getIdx());
-                FieldProject fieldProject = objectMapper.convertValue(projects.get(i), FieldProject.class);
-                builderType.setFieldValues(fieldProject);
-                builder.getBlocks().add(builderType);
-            }
-        }
-
-        if(portfolios.size() > 0) {
-            for (int i = 0; i < portfolios.size(); i++) {
-                BuilderType builderType = new BuilderType();
-                builderType.setBlockType("Portfolio");
-                builderType.setId(portfolios.get(i).getId());
-                builderType.setIdx(portfolios.get(i).getIdx());
-                FieldPortfolio fieldPortfolio = objectMapper.convertValue(portfolios.get(i), FieldPortfolio.class);
-                builderType.setFieldValues(fieldPortfolio);
-                builder.getBlocks().add(builderType);
-            }
-        }
         if(block != null) {
             log.info("block test ::: {}", block);
-           builder.setBlockLayout(objectMapper.convertValue(block.getBlockLayout(), ArrayList.class));
-           builder.setBlockTypeStyle(objectMapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
+           builder.setBlockLayout(mapper.convertValue(block.getBlockLayout(), ArrayList.class));
+           builder.setBlockTypeStyle(mapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
         }
+        System.out.println(builder);
         res.setBody(builder);
 
         return  new ResponseEntity(res, HttpStatus.OK);
+    }
+
+
+    private void makeBuilderType(Builder builder, List<?> builderData) throws JsonProcessingException, NoSuchFieldException, IllegalAccessException {
+        if(builderData.size() > 0) {
+            for (int i = 0; i < builderData.size(); i++) {
+                BuilderType builderType = new BuilderType();
+                Class<?> builderClass = builderData.get(i).getClass();
+                builderType.setBlockType(builderClass.getSimpleName());
+                builderType.setId((Long) builderClass.getField("id").get(builderData.get(i)));
+                builderType.setIdx((String) builderClass.getField("idx").get(builderData.get(i)));
+                builderType.setFieldValues(mapper.convertValue(builderData.get(i), builderClass));
+                builder.getBlocks().add(builderType);
+            }
+        }
     }
 }

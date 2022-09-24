@@ -1,6 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.builder.model;
 
 import com.example.portfoliopagebuilder_bnd.login.model.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,12 +19,18 @@ public class Portfolio implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public Long id;
+
+    @Column(name = "idx")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String idx;
 
     @Column(name = "image1")
     private String portfolioThumbnail;
@@ -37,14 +44,13 @@ public class Portfolio implements Serializable {
     @Column(name = "link1")
     private String portfolioURL;
 
-    @Column(name = "idx")
-    private String idx;
-
     @CreationTimestamp
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
     @UpdateTimestamp
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp modifyDate;
 
 }
