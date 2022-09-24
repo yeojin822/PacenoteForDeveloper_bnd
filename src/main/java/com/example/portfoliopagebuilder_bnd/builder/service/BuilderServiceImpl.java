@@ -32,6 +32,7 @@ public class BuilderServiceImpl implements BuilderService {
     private final ProfileRepository profileRepository;
     private final BlockRepository blockRepository;
     private final CareerRepository careerRepository;
+    private final MarkDownRepository markDownRepository;
     private final UserRepository userRepository;
 
 
@@ -76,6 +77,12 @@ public class BuilderServiceImpl implements BuilderService {
                     portfolioRepository.save(portfolio);
                 }
 
+                if (builderItem.getBlockType().equals("MarkDown")) {
+                    MarkDown markDown = mapper.convertValue(builderItem.getFieldValues(), MarkDown.class);
+                    markDown.setUser(user);
+                    markDown.setIdx(builderItem.getIdx());
+                    markDownRepository.save(markDown);
+                }
             }
 
             //blockLayout, blockLayoutStyle set
@@ -111,6 +118,7 @@ public class BuilderServiceImpl implements BuilderService {
         makeBuilderType(builder, careerRepository.findAllByUserId_Id(id));
         makeBuilderType(builder, projectRepository.findAllByUserId_Id(id));
         makeBuilderType(builder, portfolioRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, markDownRepository.findAllByUserId_Id(id));
 
         Block block = blockRepository.findByUserId_Id(id);
         if(block != null) {
@@ -129,10 +137,11 @@ public class BuilderServiceImpl implements BuilderService {
         if(builderData.size() > 0) {
             for (int i = 0; i < builderData.size(); i++) {
                 BuilderType builderType = new BuilderType();
-                builderType.setBlockType(builderData.get(i).getClass().getSimpleName());
-                builderType.setId((Long) builderData.get(i).getClass().getField("id").get(builderData.get(i)));
-                builderType.setIdx((String) builderData.get(i).getClass().getField("idx").get(builderData.get(i)));
-                builderType.setFieldValues(mapper.writeValueAsString(builderData.get(i)));
+                Class<?> builderClass = builderData.get(i).getClass();
+                builderType.setBlockType(builderClass.getSimpleName());
+                builderType.setId((Long) builderClass.getField("id").get(builderData.get(i)));
+                builderType.setIdx((String) builderClass.getField("idx").get(builderData.get(i)));
+                builderType.setFieldValues(mapper.convertValue(builderData.get(i), builderClass));
                 builder.getBlocks().add(builderType);
             }
         }

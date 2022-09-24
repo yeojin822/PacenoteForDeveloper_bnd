@@ -29,6 +29,10 @@ public class Profile implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long id;
 
+    @Column(name = "idx")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String idx;
+
     @Column(name = "image")
     private String profileImage;
 
@@ -70,10 +74,6 @@ public class Profile implements Serializable {
 
     @Column(name = "keyword5")
     private String profileKeyword5;
-
-    @Column(name = "idx")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public String idx;
 
     @CreationTimestamp
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

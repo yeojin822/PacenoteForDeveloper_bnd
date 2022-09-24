@@ -44,8 +44,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
             log.info("session_obj == null");
             throw new Exception("유효한 인증토큰이 존재하지 않습니다.");
         }
-
-        // 개발이면서 refine이면 통과
         if (
                 (!"prd".equals(environment.getActiveProfiles()[0]) && devKey.equals(session_obj.toString()))
         ) {
