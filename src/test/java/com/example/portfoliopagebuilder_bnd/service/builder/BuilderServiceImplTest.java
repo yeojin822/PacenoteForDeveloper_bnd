@@ -1,5 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
+import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.model.Profile;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderServiceImpl;
@@ -12,6 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,22 +27,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class BuilderServiceImplTest {
-    @Mock
+//    @Mock
+    @Autowired
     ProjectRepository projectRepository;
-    @Mock
+    @Autowired
     PortfolioRepository portfolioRepository;
-    @Mock
+    @Autowired
     ProfileRepository profileRepository;
-    @Mock
+    @Autowired
     CareerRepository careerRepository;
-    @Mock
+    @Autowired
     UserRepository userRepository;
-    @Mock
+    @Autowired
     BlockRepository blockRepository;
+    @Autowired
+    MarkDownRepository markDownRepository;
 
-    @InjectMocks
+//    @InjectMocks
+    @Autowired
     private BuilderServiceImpl builderService;
 
     ObjectMapper mapper = new ObjectMapper();
@@ -47,6 +57,7 @@ class BuilderServiceImplTest {
             "  \"blocks\": [\n" +
             "    {\n" +
             "      \"blockType\": \"Profile\",\n" +
+            "      \"idx\": \"1\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
             "        \"profileMainText\": \"Front End Developer\",\n" +
@@ -66,6 +77,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Project\",\n" +
+            "      \"idx\": \"1\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"projectName\": \"대출 추천 재개발\",\n" +
             "        \"projectOrganigation\": \"현대 자동차\",\n" +
@@ -77,6 +89,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Project\",\n" +
+            "      \"idx\": \"2\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"projectName\": \"대출 추천 재개발\",\n" +
             "        \"projectOrganigation\": \"현대 자동차\",\n" +
@@ -88,6 +101,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Career\",\n" +
+            "      \"idx\": \"1\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"careerMainText\": \"현대 자동차\",\n" +
             "        \"careerSubText\": \"Front-End\",\n" +
@@ -97,6 +111,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Career\",\n" +
+            "      \"idx\": \"2\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"careerMainText\": \"현대 자동차\",\n" +
             "        \"careerSubText\": \"Front-End\",\n" +
@@ -106,6 +121,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Career\",\n" +
+            "      \"idx\": \"3\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"careerMainText\": \"현대 자동차\",\n" +
             "        \"careerSubText\": \"Front-End\",\n" +
@@ -115,6 +131,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Portfolio\",\n" +
+            "      \"idx\": \"1\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"portfolioThumbnail\": \"https://image.shutterstock.com/image-photo/osaka-japan-june-24-2017-600w-669537982.jpg\",\n" +
             "        \"portfolioName\": \"MZ세대 언어\",\n" +
@@ -124,6 +141,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Portfolio\",\n" +
+            "      \"idx\": \"2\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"portfolioThumbnail\": \"https://image.shutterstock.com/image-photo/osaka-japan-june-24-2017-600w-669537982.jpg\",\n" +
             "        \"portfolioName\": \"MZ세대 언어\",\n" +
@@ -133,6 +151,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Portfolio\",\n" +
+            "      \"idx\": \"3\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"portfolioThumbnail\": \"https://image.shutterstock.com/image-photo/osaka-japan-june-24-2017-600w-669537982.jpg\",\n" +
             "        \"portfolioName\": \"MZ세대 언어\",\n" +
@@ -142,6 +161,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"Portfolio\",\n" +
+            "      \"idx\": \"4\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"portfolioThumbnail\": \"https://image.shutterstock.com/image-photo/osaka-japan-june-24-2017-600w-669537982.jpg\",\n" +
             "        \"portfolioName\": \"MZ세대 언어\",\n" +
@@ -151,6 +171,7 @@ class BuilderServiceImplTest {
             "    },\n" +
             "    {\n" +
             "      \"blockType\": \"MarkDown\",\n" +
+            "      \"idx\": \"1\",\n" +
             "      \"fieldValues\": {\n" +
             "        \"markdownText\": \"# Multi Project Extension 제작 회고 \\n ## 제작 동기 \\n 현재 다니고 있는 ECount 회사는 Client/Server Framework를 자체 제작해서 사용한다.  \\n신규 Framework를 제작 중인데 핵심 개념은 모듈화다.  \"\n" +
             "      }\n" +
@@ -185,43 +206,29 @@ class BuilderServiceImplTest {
     @DisplayName("빌더 저장하기")
     void 저장하기() throws Exception {
         //given
-//        User testUser = User.builder().id("kakao_2224182301").build();
-//        given(userRepository.getById(any())).willReturn(testUser);
-//        Map map = mapper.readValue(json, Map.class);
+        User testUser = User.builder().id("kakao_2224182301").build();
+        given(userRepository.getById(any())).willReturn(testUser);
 
         //when
-//        boolean save = builderService.save(map);
+        ResponseEntity<?> save = builderService.save(mapper.readValue(json, Builder.class));
 
         //then
-//        assertThat(save).isEqualTo(true);
+        assertThat(save.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @DisplayName("빌더 조회하기")
     void 조회하기() throws Exception {
-        String testData = "{ \"id\": \"1\",\n" +
-                    "        \"idx\": \"1\",\n" +
-                    "        \"profileImage\": \"https://image.shutterstock.com/image-photo/osaka-japan-jun e-24-2017-600w-669537982.jpg\",\n" +
-                    "        \"profileMainText\": \"Front End Developer\",\n" +
-                    "        \"profileSubText\": \"안녕하세요 :) 서핏 팀의 \\n디자이너 박소연입니다.\",\n" +
-                    "        \"profileAdditionalInfo\": \"apply\",\n" +
-                    "        \"profileApplyCompany\": \"당근마켓\",\n" +
-                    "        \"profileApplyPosition\": \"Front End\",\n" +
-                    "        \"profilePhoneNumber\": \"010-3734-1715\",\n" +
-                    "        \"profileEmail\": \"ket8780@gmail.com\",\n" +
-                    "        \"profileGitHubURL\": \"https://github.com/choiseunghyeon\",\n" +
-                    "        \"profileKeyword1\": \"근명\",\n" +
-                    "        \"profileKeyword2\": \"성실\",\n" +
-                    "        \"profileKeyword3\": \"책임\",\n" +
-                    "        \"profileKeyword4\": \"개발\",\n" +
-                    "        \"profileKeyword5\": \"혁신\"\n" +
-                    " }";
+        //given
+        User testUser = User.builder().id("kakao_2224182301").build();
+        given(userRepository.getById(any())).willReturn(testUser);
+        builderService.save(mapper.readValue(json, Builder.class));
+
         //when
-        Profile testUser = mapper.readValue(testData, Profile.class);
-        List<Profile> list = new ArrayList<>();
-        list.add(testUser);
-        given(profileRepository.findAllByUserId_Id(any())).willReturn(list);
-        builderService.detail("kakao_2224182301");
+        ResponseEntity<?> test = builderService.detail("kakao_2224182301");
+        System.out.println();
+        System.out.println("test");
+        System.out.println(test.getBody());
         //then
     }
 
