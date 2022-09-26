@@ -6,20 +6,20 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.LinkedHashMap;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class TechFavoriteEntity {
+public class TechFavorite {
 
     @Id
     @Column(name = "user_id")
     private Long user_id;
 
-    @Column(name = "blod_id",columnDefinition = "JSON")
+    @Column(name = "blog_id",columnDefinition = "JSON")
     @Convert(converter = StringMapConverter.class)
-    private LinkedHashMap<String,Object> blodId;
+    private List<String> blogId;
 
     @Column(name = "write_date")
     private DateTime writeDate;

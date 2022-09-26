@@ -2,11 +2,9 @@ package com.example.portfoliopagebuilder_bnd.common.util.web;
 
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,37 +20,13 @@ public class WebRequestUtil {
         try {
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(method);
-            //Content-Type 또한 요청 받는 데이터 타입이 Json이면 json타입으로 선언해주시면 되고 -> 추후 타입 변경
-            // 개발 환경에 따라 설정해주시면 됩니다.
-            //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setUseCaches(false);// 캐싱데이터를 받을지 말지 세팅합니다.
-            // 쓰기모드를 지정할지 세팅 (GET인데 true이면 자동으로 POST변경)
-            connection.setDoOutput(method.equals("GET") ? false : true);
 
-            //Send request
-            //위에서 세팅한 정보값을 바탕으로 요청을 보냅니다.
-            if(connection.getDoOutput()){
-                DataOutputStream wr = new DataOutputStream (
-                        connection.getOutputStream());
-                //파라미터 정보를 보냅니다.
-                wr.writeBytes(param);
-                //요청 실행후 dataOutputStream을 close 합니다.
-                wr.close();
-            }
+            setting(method, connection);
 
-            //Get Response
-            InputStream is = connection.getInputStream();
-            //요청 결과 (response)를 BufferedReader로 받습니다.
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            // 자바 5 이상은 StringBuffer 를 이용해서 결과 값을 읽습니다.
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
+            writeBody(param, connection);
+
+            StringBuilder response = response(connection);
+
             return response.toString();
         } catch (Exception e) {
             //connection.getResponseMessage()
@@ -62,6 +36,39 @@ public class WebRequestUtil {
             if (connection != null) {
                 connection.disconnect();
             }
+        }
+    }
+
+    private static StringBuilder response(HttpURLConnection connection) throws IOException {
+        StringBuilder response = new StringBuilder();
+        InputStream is = connection.getInputStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = rd.readLine()) != null) {
+            response.append(line);
+            response.append('\r');
+        }
+        rd.close();
+
+        return response;
+    }
+
+    private static void setting(String method, HttpURLConnection connection) throws ProtocolException {
+        connection.setRequestMethod(method);
+        //Content-Type 또한 요청 받는 데이터 타입이 Json이면 json타입으로 선언 -> 추후 타입 변경
+        //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setUseCaches(false);// 캐싱데이터를 받을지 말지 세팅
+        connection.setDoOutput(method.equals("GET") ? false : true); // 쓰기모드를 지정할지 세팅 (GET인데 true이면 자동으로 POST변경)
+    }
+
+    private static void writeBody(String param, HttpURLConnection connection) throws IOException {
+        if(connection.getDoOutput()){
+            DataOutputStream wr = new DataOutputStream (
+                    connection.getOutputStream());
+            //파라미터 정보를 보냅니다.
+            wr.writeBytes(param);
+            //요청 실행후 dataOutputStream을 close 합니다.
+            wr.close();
         }
     }
 }
