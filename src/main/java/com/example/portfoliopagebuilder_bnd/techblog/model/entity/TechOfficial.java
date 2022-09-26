@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class TechOfficialEntity {
+public class TechOfficial {
 
     @Id
     @Column(name = "blog_id")

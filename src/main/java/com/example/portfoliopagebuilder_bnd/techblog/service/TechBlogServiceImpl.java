@@ -1,12 +1,20 @@
 package com.example.portfoliopagebuilder_bnd.techblog.service;
 
-
-import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
+import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.common.util.web.WebRequestUtil;
+import com.example.portfoliopagebuilder_bnd.techblog.model.dto.TechBlogListDto;
+import com.example.portfoliopagebuilder_bnd.techblog.model.entity.TechFavorite;
+import com.example.portfoliopagebuilder_bnd.techblog.model.entity.TechOfficial;
 import com.example.portfoliopagebuilder_bnd.techblog.repository.TechFavoriteRepository;
 import com.example.portfoliopagebuilder_bnd.techblog.repository.TechOfficialRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,39 +30,76 @@ public class TechBlogServiceImpl implements TechBlogService {
     private final TechOfficialRepository techOfficialRepository;
     private final TechFavoriteRepository techFavoriteRepository;
 
-
-
     @Override
-    public boolean save(Map<String, Object> param) throws Exception{
+    public boolean save(String userId, String officialId) throws Exception {
+        TechFavorite techFavorite = techFavoriteRepository.findById(userId).orElse(null);
+
+        if (techFavorite == null) {
+            techFavorite = new TechFavorite();
+        }
+
+        List<String> blogList = techFavorite.getBlogId();
+
+        blogList.add(officialId);
+
+        techFavorite.setBlogId(blogList);
+
+        techFavoriteRepository.save(techFavorite);
 
         return true;
     }
 
     @Override
-    public ResponseEntity<?> getTechBlogList(String id) throws  Exception{
+    public ResponseEntity<?> list(String id) throws Exception {
+        BaseResponse<TechBlogListDto> response = new BaseResponse();
+        TechBlogListDto techBlogListDto = new TechBlogListDto();
+        techBlogDtoSetting(id, techBlogListDto);
 
-        this.getOfficialList();
-        this.getFavoriteByUser(id);
-        return null;
+        response.setBody(techBlogListDto);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public Map<?,?> getNewestTechBlogPost() throws  Exception{
-        String url = "http://localhost:8000/tech-blog/datas";
-
-        String response = WebRequestUtil.httpRequest(url, "", "GET");
-
-        // DB저장
-        // 스케줄러에 성공여부 송신
-
-        return null;
+    private void techBlogDtoSetting(String id, TechBlogListDto techBlogListDto) throws Exception {
+        techBlogListDto.setTechFavorite(this.userFavorite(id));
+        techBlogListDto.setTechOfficialList(this.officialList());
     }
 
-    private ResponseEntity<?> getOfficialList() throws Exception{
-        return null;
+    public boolean newList() throws Exception {
+        String url = "http://localhost:8000/tech_blog/datas";
+        Map<String, String> map = null;
+
+        try {
+            String response = WebRequestUtil.httpRequest(url, "", "GET");
+            map = new ObjectMapper().readValue(response, Map.class);
+
+            List<TechOfficial> techOfficials = techOfficialRepository.findAll();
+
+            for (TechOfficial techOfficial : techOfficials) {
+                String officialName = techOfficial.getOfficialName();
+                DateTime newTime = DateTime.parse(map.get(officialName));
+
+                if(!map.containsKey(officialName) || techOfficial.getUpdateDate() == newTime){
+                    continue;
+                }
+
+                techOfficial.setUpdateDate(newTime);
+            }
+
+            techOfficialRepository.saveAll(techOfficials);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
+    private List<TechOfficial> officialList() throws Exception {
+        return techOfficialRepository.findAll();
+    }
 
-    private ResponseEntity<?> getFavoriteByUser(String id) throws Exception{
-        return null;
+    private TechFavorite userFavorite(String id) throws Exception {
+        return techFavoriteRepository.findById(id).orElse(null);
     }
 }
