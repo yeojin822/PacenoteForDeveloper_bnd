@@ -27,27 +27,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-//@ExtendWith(MockitoExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class BuilderServiceImplTest {
-//    @Mock
-    @Autowired
+    @Mock
     ProjectRepository projectRepository;
-    @Autowired
+    @Mock
     PortfolioRepository portfolioRepository;
-    @Autowired
+    @Mock
     ProfileRepository profileRepository;
-    @Autowired
+    @Mock
     CareerRepository careerRepository;
-    @Autowired
+    @Mock
     UserRepository userRepository;
-    @Autowired
+    @Mock
     BlockRepository blockRepository;
-    @Autowired
+    @Mock
     MarkDownRepository markDownRepository;
 
-//    @InjectMocks
-    @Autowired
+    @InjectMocks
     private BuilderServiceImpl builderService;
 
     ObjectMapper mapper = new ObjectMapper();

@@ -45,7 +45,7 @@ public class BuilderServiceImpl implements BuilderService {
         try {
             for (int i = 0; i < param.getBlocks().size(); i++) {
                 BuilderType builderItem = param.getBlocks().get(i);
-                log.info("builderItem : {}", builderItem);
+
                 if (builderItem.getBlockType().equals("Profile")) {
                     Profile profile = mapper.convertValue(builderItem.getFieldValues(), Profile.class);
                     profile.setUser(user);
@@ -145,17 +145,29 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
 
-    private void makeBuilderType(Builder builder, List<?> builderData) throws JsonProcessingException, NoSuchFieldException, IllegalAccessException {
-        if (builderData.size() > 0) {
-            for (int i = 0; i < builderData.size(); i++) {
-                BuilderType builderType = new BuilderType();
-                Class<?> builderClass = builderData.get(i).getClass();
-                builderType.setBlockType(builderClass.getSimpleName());
-                builderType.setId((Long) builderClass.getField("id").get(builderData.get(i)));
-                builderType.setIdx((String) builderClass.getField("idx").get(builderData.get(i)));
-                builderType.setFieldValues(mapper.convertValue(builderData.get(i), builderClass));
-                builder.getBlocks().add(builderType);
-            }
+    private void makeBuilderType(Builder builder, List<?> builderDataList) throws NoSuchFieldException, IllegalAccessException {
+        if(builderDataList.size() == 0) {
+            return;
         }
+
+        for (Object builderData : builderDataList) {
+            BuilderType builderType = new BuilderType();
+            Class<?> builderClass = builderData.getClass();
+
+            builderTypeSetting(builderData, builderType, builderClass);
+
+            builder.getBlocks().add(builderType);
+        }
+    }
+
+    private void builderTypeSetting(Object builderData, BuilderType builderType, Class<?> builderClass) throws IllegalAccessException, NoSuchFieldException {
+        builderType.setBlockType(builderClass.getSimpleName());
+        builderType.setId((Long) getBuilderDataField("id", builderData, builderClass));
+        builderType.setIdx((String) getBuilderDataField("idx", builderData, builderClass));
+        builderType.setFieldValues(mapper.convertValue(builderData, builderClass));
+    }
+
+    private Object getBuilderDataField(String name, Object builderData, Class<?> builderClass) throws IllegalAccessException, NoSuchFieldException {
+        return builderClass.getField(name).get(builderData);
     }
 }
