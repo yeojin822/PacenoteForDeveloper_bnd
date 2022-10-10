@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -39,7 +36,7 @@ public class BuilderServiceImpl implements BuilderService {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public ResponseEntity<?> save(Builder param) throws Exception{
+    public ResponseEntity<?> save(Builder param) throws Exception {
         log.info("testSave ::: {}", param);
 
         //유저 정보
@@ -48,10 +45,13 @@ public class BuilderServiceImpl implements BuilderService {
         try {
             for (int i = 0; i < param.getBlocks().size(); i++) {
                 BuilderType builderItem = param.getBlocks().get(i);
-
+                log.info("builderItem : {}", builderItem);
                 if (builderItem.getBlockType().equals("Profile")) {
                     Profile profile = mapper.convertValue(builderItem.getFieldValues(), Profile.class);
                     profile.setUser(user);
+                    if(builderItem.getId() != null){
+                        profile.setId(builderItem.getId());
+                    }
                     profile.setIdx(builderItem.getIdx());
                     profileRepository.save(profile);
                 }
@@ -59,6 +59,9 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Project")) {
                     Project project = mapper.convertValue(builderItem.getFieldValues(), Project.class);
                     project.setUser(user);
+                    if(builderItem.getId() != null){
+                        project.setId(builderItem.getId());
+                    }
                     project.setIdx(builderItem.getIdx());
                     projectRepository.save(project);
                 }
@@ -66,6 +69,9 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Career")) {
                     Career career = mapper.convertValue(builderItem.getFieldValues(), Career.class);
                     career.setUser(user);
+                    if(builderItem.getId() != null){
+                        career.setId(builderItem.getId());
+                    }
                     career.setIdx(builderItem.getIdx());
                     careerRepository.save(career);
                 }
@@ -73,6 +79,9 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Portfolio")) {
                     Portfolio portfolio = mapper.convertValue(builderItem.getFieldValues(), Portfolio.class);
                     portfolio.setUser(user);
+                    if(builderItem.getId() != null){
+                        portfolio.setId(builderItem.getId());
+                    }
                     portfolio.setIdx(builderItem.getIdx());
                     portfolioRepository.save(portfolio);
                 }
@@ -80,6 +89,9 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("MarkDown")) {
                     MarkDown markDown = mapper.convertValue(builderItem.getFieldValues(), MarkDown.class);
                     markDown.setUser(user);
+                    if(builderItem.getId() != null){
+                        markDown.setId(builderItem.getId());
+                    }
                     markDown.setIdx(builderItem.getIdx());
                     markDownRepository.save(markDown);
                 }
@@ -87,27 +99,27 @@ public class BuilderServiceImpl implements BuilderService {
 
             //blockLayout, blockLayoutStyle set
             Block block = blockRepository.findByUserId_Id(user.getId());
-            if(block != null) {
+            if (block != null) {
                 // 저장된 block 이 있으면 update
                 block.setBlockLayout(param.getBlockLayout());
                 block.setBlockTypeStyle(param.getBlockTypeStyle());
                 blockRepository.save(block);
-             }else{
+            } else {
                 Block newBlock = new Block();
                 newBlock.setUser(user);
                 newBlock.setBlockLayout(param.getBlockLayout());
                 newBlock.setBlockTypeStyle(param.getBlockTypeStyle());
                 blockRepository.save(newBlock);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("insert error :: {}", e.getMessage());
             return new ResponseEntity("저장에 실패하였습니다.", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("ok",HttpStatus.OK);
+        return new ResponseEntity("ok", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> detail(String id) throws Exception{
+    public ResponseEntity<?> detail(String id) throws Exception {
         BaseResponse<Builder> res = new BaseResponse();
         //공통부분
 
@@ -121,20 +133,20 @@ public class BuilderServiceImpl implements BuilderService {
         makeBuilderType(builder, markDownRepository.findAllByUserId_Id(id));
 
         Block block = blockRepository.findByUserId_Id(id);
-        if(block != null) {
+        if (block != null) {
             log.info("block test ::: {}", block);
-           builder.setBlockLayout(mapper.convertValue(block.getBlockLayout(), ArrayList.class));
-           builder.setBlockTypeStyle(mapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
+            builder.setBlockLayout(mapper.convertValue(block.getBlockLayout(), ArrayList.class));
+            builder.setBlockTypeStyle(mapper.convertValue(block.getBlockTypeStyle(), LinkedHashMap.class));
         }
         System.out.println(builder);
         res.setBody(builder);
 
-        return  new ResponseEntity(res, HttpStatus.OK);
+        return new ResponseEntity(res, HttpStatus.OK);
     }
 
 
     private void makeBuilderType(Builder builder, List<?> builderData) throws JsonProcessingException, NoSuchFieldException, IllegalAccessException {
-        if(builderData.size() > 0) {
+        if (builderData.size() > 0) {
             for (int i = 0; i < builderData.size(); i++) {
                 BuilderType builderType = new BuilderType();
                 Class<?> builderClass = builderData.get(i).getClass();
