@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,14 +21,13 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-
         log.info("Start oauth :: ");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         log.info("from user :: " + principalDetails.getUser());
@@ -36,24 +37,23 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // 세션키 생성
         try {
             Token token = jwtTokenProvider.createToken(user);
+            String url = makeRedirectUrl(token.getSessionKey());
 
-            user.setSessionKey(token.getSessionKey());
-            BaseResponse res = new BaseResponse();
-            res.setBody(user);
-
-
-            response.setContentType("text/html;charset=UTF-8");
-            response.setHeader("Cache-Control", "no-cache, no-store");
-            response.setContentType("application/json;charset=UTF-8");
-            response.setStatus(200);
-
-            var writer = response.getWriter();
-            writer.println(objectMapper.writeValueAsString(res));
-            writer.flush();
+            if (response.isCommitted()) {
+                log.debug("응답이 이미 커밋된 상태입니다. " + url + "로 리다이렉트하도록 바꿀 수 없습니다.");
+                return;
+            }
+            getRedirectStrategy().sendRedirect(request, response, url);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+        private String makeRedirectUrl(String token) {
+            return UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+                    .queryParam("token", token)
+                    .build().toUriString();
+        }
 
 }
