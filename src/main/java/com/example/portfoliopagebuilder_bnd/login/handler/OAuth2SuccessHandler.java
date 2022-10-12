@@ -51,7 +51,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
         private String makeRedirectUrl(String token) {
-            return UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+            return UriComponentsBuilder.fromUriString("https://portfolio-builder-liard.vercel.app/oauth2/redirect")
                     .queryParam("token", token)
                     .build().toUriString();
         }
