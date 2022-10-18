@@ -12,7 +12,7 @@ spring:
   config:
     import: configserver:${config_url} #ec2 주소 config 포트
   profiles:
-    active: dev
+    active: local
 
 logging:
   level:

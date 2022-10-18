@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.common.util;
+package com.example.portfoliopagebuilder_bnd.login.token;
 
 import com.example.portfoliopagebuilder_bnd.login.dto.PpbUser;
 import com.example.portfoliopagebuilder_bnd.login.dto.Token;
@@ -17,14 +17,13 @@ import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
-@Component
 public class JwtTokenProvider {
 
     @Value("${token.secretKey}")
-    protected String secretKey;
+    private String secretKey;
 
     @Value("${token.tokenPeriod}")
-    protected long tokenPeriod;
+    long tokenPeriod;
 
     @PostConstruct
     protected void init() {
