@@ -5,7 +5,6 @@ import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import com.example.portfoliopagebuilder_bnd.login.dto.RoleType;
 import com.example.portfoliopagebuilder_bnd.login.handler.OAuth2AuthenticationFailureHandler;
 import com.example.portfoliopagebuilder_bnd.login.handler.OAuth2AuthenticationSuccessHandler;
-import com.example.portfoliopagebuilder_bnd.login.handler.OAuth2SuccessHandler;
 import com.example.portfoliopagebuilder_bnd.login.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.example.portfoliopagebuilder_bnd.login.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -72,28 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.successHandler(oAuth2AuthenticationSuccessHandler())
 				.failureHandler(oAuth2AuthenticationFailureHandler());
-//		http	.csrf().disable()
-//				.formLogin().disable()
-//				.httpBasic().disable()
-//				.oauth2Login()
-//				.authorizationEndpoint()
-//				.baseUri("/oauth2/authorization")
-//				.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-//				.and()
-//					.redirectionEndpoint()
-//					.baseUri("/*/oauth2/code/*")
-//				.and()
-//					.userInfoEndpoint()
-//					.userService(oAuth2UserService)
-//				.and()
-//					.successHandler(successHandler)
-//					.failureUrl("/");
-
-//		http.csrf().disable();
-//		http.oauth2Login()
-//			.successHandler(successHandler)
-//			.userInfoEndpoint() // 로그인이 완료되면 코드가 아닌 (엑세스 토큰 + 사용자 프로필 정보)를 받음
-//			.userService(oAuth2UserService);
 	}
 
 	/*
