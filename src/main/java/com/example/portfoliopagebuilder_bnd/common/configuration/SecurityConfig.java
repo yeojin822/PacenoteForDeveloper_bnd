@@ -1,10 +1,12 @@
 package com.example.portfoliopagebuilder_bnd.common.configuration;
 
 import com.example.portfoliopagebuilder_bnd.common.configuration.properties.AppProperties;
+import com.example.portfoliopagebuilder_bnd.common.exception.RestAuthenticationEntryPoint;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
 import com.example.portfoliopagebuilder_bnd.login.dto.RoleType;
 import com.example.portfoliopagebuilder_bnd.login.handler.OAuth2AuthenticationFailureHandler;
 import com.example.portfoliopagebuilder_bnd.login.handler.OAuth2AuthenticationSuccessHandler;
+import com.example.portfoliopagebuilder_bnd.login.handler.TokenAccessDeniedHandler;
 import com.example.portfoliopagebuilder_bnd.login.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.example.portfoliopagebuilder_bnd.login.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final CustomOAuth2UserService oAuth2UserService;
 	private final AppProperties appProperties;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 
 	@Bean
 	public BCryptPasswordEncoder encodePassword(){
@@ -44,33 +47,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.cors()
 				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+					.sessionManagement()
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-				.csrf().disable()
-				.formLogin().disable()
-				.httpBasic().disable()
-				.exceptionHandling()
+					.csrf().disable()
+					.formLogin().disable()
+					.httpBasic().disable()
+					.exceptionHandling()
+					.authenticationEntryPoint(new RestAuthenticationEntryPoint())
+					.accessDeniedHandler(tokenAccessDeniedHandler)
 				.and()
-				.authorizeRequests()
-				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-				.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-				.antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-				.anyRequest().authenticated()
+					.authorizeRequests()
+					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+					.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+					.antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+					.anyRequest().authenticated()
 				.and()
-				.oauth2Login()
-				.authorizationEndpoint()
-				.baseUri("/oauth2/authorization")
-				.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+					.oauth2Login()
+					.authorizationEndpoint()
+					.baseUri("/oauth2/authorization")
+					.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
 				.and()
-				.redirectionEndpoint()
-				.baseUri("/*/oauth2/code/*")
+					.redirectionEndpoint()
+					.baseUri("/*/oauth2/code/*")
+					.and()
+					.userInfoEndpoint()
+					.userService(oAuth2UserService)
 				.and()
-				.userInfoEndpoint()
-				.userService(oAuth2UserService)
-				.and()
-				.successHandler(oAuth2AuthenticationSuccessHandler())
-				.failureHandler(oAuth2AuthenticationFailureHandler());
+					.successHandler(oAuth2AuthenticationSuccessHandler())
+					.failureHandler(oAuth2AuthenticationFailureHandler());
 	}
 
 	/*
