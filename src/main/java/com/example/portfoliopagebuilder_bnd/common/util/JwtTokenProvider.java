@@ -21,10 +21,10 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     @Value("${token.secretKey}")
-    private String secretKey;
+    protected String secretKey;
 
     @Value("${token.tokenPeriod}")
-    long tokenPeriod;
+    protected long tokenPeriod;
 
     @PostConstruct
     protected void init() {
