@@ -110,10 +110,10 @@ public class JwtTokenProvider {
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
-
+            log.info("로그인 하고 authorities:: {}", authorities);
             log.debug("claims subject := [{}]", claims.getSubject());
             User principal = new User(claims.getSubject(), "", authorities);
-
+            log.info("로그인 하고 :: {}", principal);
             return new UsernamePasswordAuthenticationToken(principal, token, authorities);
         } else {
             throw new TokenValidFailedException();
@@ -125,9 +125,9 @@ public class JwtTokenProvider {
                 Arrays.stream(new String[]{"ROLE_USER","ROLE_ADMIN"})
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
+        log.info("테스트 호출 했을때 authorities:: {}", authorities);
         User principal = new User("test", "", authorities);
-
+        log.info("테스트 호출 했을때 principal:: {}", principal);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 }

@@ -27,12 +27,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        log.info("token.devkey  ::: {}", devKey);
         log.info("api path : " + request.getServletPath());
         log.info(request.getHeader("sessionkey"));
         log.info("request.getRemoteAddr() :: " + request.getRemoteAddr());
         Object session_obj = request.getHeader("sessionkey");
-        log.info("test session_obj ::: {}", session_obj.toString());
+
         if (session_obj != null) {
             if (!"prd".equals(environment.getActiveProfiles()[0]) && devKey.equals(session_obj.toString())) {
                 SecurityContextHolder.getContext().setAuthentication(jwtTokenProvider.getTestAuthentication(session_obj.toString()));
