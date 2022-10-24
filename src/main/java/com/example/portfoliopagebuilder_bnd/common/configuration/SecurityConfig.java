@@ -1,5 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.common.configuration;
 
+import com.example.portfoliopagebuilder_bnd.common.configuration.filter.TokenAuthenticationFilter;
 import com.example.portfoliopagebuilder_bnd.common.configuration.properties.AppProperties;
 import com.example.portfoliopagebuilder_bnd.common.exception.RestAuthenticationEntryPoint;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
@@ -10,15 +11,24 @@ import com.example.portfoliopagebuilder_bnd.login.handler.TokenAccessDeniedHandl
 import com.example.portfoliopagebuilder_bnd.login.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.example.portfoliopagebuilder_bnd.login.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 // oauth2 과정
 // 1.코드받기(인증), 2.액세스토큰(권한),
@@ -31,15 +41,42 @@ import org.springframework.web.cors.CorsUtils;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	private static final String[] PERMIT_URL_ARRAY = {
+			"/",
+			"/login",
+			/* swagger v2 */
+			"/v2/api-docs",
+			"/swagger-resources",
+			"/swagger-resources/**",
+			"/configuration/ui",
+			"/configuration/security",
+			"/swagger-ui.html",
+			"/webjars/**",
+			/* swagger v3 */
+			"/v3/api-docs/**",
+			"/swagger-ui/**",
+			"/configuration/**",
+			"/resource/**"
+	};
 
+	private final Environment environment;
 	private final CustomOAuth2UserService oAuth2UserService;
 	private final AppProperties appProperties;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 
+	@Value("${token.devKey}")
+	private String devKey;
+
 	@Bean
 	public BCryptPasswordEncoder encodePassword(){
 		return new BCryptPasswordEncoder();
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().mvcMatchers("/docs/index.html");
+		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 	}
 
 	@Override
@@ -59,6 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+					.antMatchers(PERMIT_URL_ARRAY).permitAll()
 					.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
 					.antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
 					.anyRequest().authenticated()
@@ -76,6 +114,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 					.successHandler(oAuth2AuthenticationSuccessHandler())
 					.failureHandler(oAuth2AuthenticationFailureHandler());
+
+		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	/*
@@ -105,5 +145,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
 		return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
+	}
+
+	/*
+	 * 토큰 필터 설정
+	 * */
+	@Bean
+	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new TokenAuthenticationFilter(devKey,environment,jwtTokenProvider);
+	}
+
+	/*
+	 * Cors 설정
+	 * */
+	@Bean
+	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+		UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
+
+		CorsConfiguration corsConfig = new CorsConfiguration();
+		corsConfig.setExposedHeaders(Arrays.asList("content-type","sessionkey", "refreshkey"));
+		corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+		corsConfig.setAllowedOriginPatterns(Arrays.asList("*"));
+		corsConfig.setAllowedHeaders(Arrays.asList("*"));
+		corsConfig.setAllowCredentials(true);
+		corsConfig.setMaxAge(3600L);
+
+
+		corsConfigSource.registerCorsConfiguration("/**", corsConfig);
+		return corsConfigSource;
 	}
 }
