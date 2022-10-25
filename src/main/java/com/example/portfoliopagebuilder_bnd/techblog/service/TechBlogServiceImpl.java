@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Slf4j
@@ -77,7 +79,7 @@ public class TechBlogServiceImpl implements TechBlogService {
 
             for (TechOfficial techOfficial : techOfficials) {
                 String officialName = techOfficial.getOfficialName();
-                DateTime newTime = DateTime.parse(map.get(officialName));
+                Timestamp newTime = Timestamp.valueOf(map.get(officialName));
 
                 if(!map.containsKey(officialName) || techOfficial.getUpdateDate() == newTime){
                     continue;
@@ -93,6 +95,20 @@ public class TechBlogServiceImpl implements TechBlogService {
         }
 
         return true;
+    }
+
+    @Override
+    public ResponseEntity<?> saveOfficial(Map<?, ?> param) {
+        BaseResponse<String> response = new BaseResponse();
+        List<TechOfficial> officials = new ArrayList<>();
+
+        param.entrySet().stream().map(entry -> entry.getValue());
+
+        techOfficialRepository.saveAll(officials);
+
+        response.setBody("complete insert");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private List<TechOfficial> officialList() throws Exception {

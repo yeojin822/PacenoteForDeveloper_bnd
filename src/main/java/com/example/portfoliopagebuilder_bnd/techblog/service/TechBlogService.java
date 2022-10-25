@@ -10,4 +10,6 @@ public interface TechBlogService {
     boolean save(String userId, String officialId) throws Exception;
 
     boolean newList() throws Exception;
+
+    ResponseEntity<?> saveOfficial(Map<?,?> param);
 }
