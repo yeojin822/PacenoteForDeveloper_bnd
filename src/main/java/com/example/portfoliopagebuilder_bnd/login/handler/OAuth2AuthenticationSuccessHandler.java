@@ -4,7 +4,6 @@ package com.example.portfoliopagebuilder_bnd.login.handler;
 import com.example.portfoliopagebuilder_bnd.common.configuration.properties.AppProperties;
 import com.example.portfoliopagebuilder_bnd.common.util.CookieUtil;
 import com.example.portfoliopagebuilder_bnd.common.util.JwtTokenProvider;
-import com.example.portfoliopagebuilder_bnd.login.dto.PpbUser;
 import com.example.portfoliopagebuilder_bnd.login.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.login.dto.Token;
 import com.example.portfoliopagebuilder_bnd.login.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
@@ -67,13 +66,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         log.info("from user :: " + principalDetails.getUser());
 
-        PpbUser user = new PpbUser();
-        user.setId(principalDetails.getUser().getId());
-        user.setUsername(principalDetails.getUser().getUsername());
         // 세션키 생성
         Token token = null;
         try {
-            token = jwtTokenProvider.createToken(user);
+            token = jwtTokenProvider.createToken(principalDetails.getUser());
         } catch (Exception e) {
             e.printStackTrace();
         }
