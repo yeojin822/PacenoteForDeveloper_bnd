@@ -2,14 +2,19 @@ package com.example.portfoliopagebuilder_bnd.techblog.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class TechOfficial {
+public class TechOfficial implements Serializable {
+    static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "blog_id")
@@ -27,14 +32,10 @@ public class TechOfficial {
 
     @Column(name = "link")
     private String link;
-
+    
     @Column(name = "update_date")
-    private DateTime updateDate;
+    private Timestamp updateDate;
 
     @Column(name = "write_date")
-    private DateTime writeDate;
-
-    @Column(name = "modify_date")
-    private DateTime modifyDate;
-
+    private Timestamp writeDate;
 }
