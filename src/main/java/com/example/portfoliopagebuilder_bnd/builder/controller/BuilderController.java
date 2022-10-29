@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @Slf4j
 @Tag(name="builder", description = "builder-controller")
 @RequiredArgsConstructor
@@ -38,5 +38,12 @@ public class BuilderController {
     public ResponseEntity<?> detail(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
         return builderService.detail(id);
     }
+
+//    @Operation(summary = "빌더 블럭 삭제", description = "사용자 id로 빌더 블럭 삭제")
+//    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
+//    @DeleteMapping("/builder/{id}")
+//    public ResponseEntity<?> delete(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
+//        return builderService.delete(id);
+//    }
 
 }

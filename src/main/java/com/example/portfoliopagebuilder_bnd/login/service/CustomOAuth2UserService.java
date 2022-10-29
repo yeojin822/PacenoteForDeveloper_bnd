@@ -1,7 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.login.service;
 
-import com.example.portfoliopagebuilder_bnd.login.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.login.dto.OAuthAttributes;
+import com.example.portfoliopagebuilder_bnd.login.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
