@@ -4,6 +4,7 @@ import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.login.dto.PrincipalDetails;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.login.service.AmazonS3Service;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -30,7 +31,7 @@ public class LoginController {
 	@GetMapping("/user")
     @Operation(summary = "로그인 유저정보 조회", description = "로그인 이후 유저 정보 조회")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
-	public ResponseEntity<?> getUser(@AuthenticationPrincipal PrincipalDetails userDetails){
+	public ResponseEntity<?> getUser(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails userDetails){
         BaseResponse<User> res = new BaseResponse();
         res.setBody(userDetails.getUser());
         return new ResponseEntity(res, HttpStatus.OK);
