@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MarkDownRepository extends JpaRepository<MarkDown, String> {
+public interface MarkDownRepository extends JpaRepository<MarkDown, Long> {
     List<MarkDown> findAllByUserId_Id(String id);
 }
