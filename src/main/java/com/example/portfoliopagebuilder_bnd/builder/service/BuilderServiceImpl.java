@@ -2,6 +2,7 @@ package com.example.portfoliopagebuilder_bnd.builder.service;
 
 import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.dto.BuilderType;
+import com.example.portfoliopagebuilder_bnd.builder.dto.DeleteInfo;
 import com.example.portfoliopagebuilder_bnd.builder.model.*;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
@@ -118,7 +119,7 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
     @Override
-    public ResponseEntity<?> delete(BuilderType param) {
+    public ResponseEntity<?> delete(DeleteInfo param) {
         log.info("testDelete ::: {}", param);
 
         try {
