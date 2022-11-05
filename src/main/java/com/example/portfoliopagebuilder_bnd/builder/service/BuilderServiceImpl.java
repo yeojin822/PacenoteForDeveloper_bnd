@@ -7,7 +7,6 @@ import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.login.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BuilderServiceImpl implements BuilderService {
 
     private final ProjectRepository projectRepository;
@@ -36,6 +34,7 @@ public class BuilderServiceImpl implements BuilderService {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
+    @Transactional
     public ResponseEntity<?> save(Builder param) throws Exception {
         log.info("testSave ::: {}", param);
 
@@ -115,6 +114,38 @@ public class BuilderServiceImpl implements BuilderService {
             log.error("insert error :: {}", e.getMessage());
             return new ResponseEntity("저장에 실패하였습니다.", HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity("ok", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> delete(BuilderType param) {
+        log.info("testDelete ::: {}", param);
+
+        try {
+            if (param.getBlockType().equals("Profile")) {
+                profileRepository.deleteById(param.getId());
+            }
+
+            if (param.getBlockType().equals("Project")) {
+                projectRepository.deleteById(param.getId());
+            }
+
+            if (param.getBlockType().equals("Career")) {
+                careerRepository.deleteById(param.getId());
+            }
+
+            if (param.getBlockType().equals("Portfolio")) {
+                portfolioRepository.deleteById(param.getId());
+            }
+
+            if (param.getBlockType().equals("MarkDown")) {
+                markDownRepository.deleteById(param.getId());
+            }
+        }catch (Exception e){
+            log.error("delete error :: {}", e.getMessage());
+            return new ResponseEntity("삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity("ok", HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.builder.controller;
 
 import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
+import com.example.portfoliopagebuilder_bnd.builder.dto.BuilderType;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,11 +40,11 @@ public class BuilderController {
         return builderService.detail(id);
     }
 
-//    @Operation(summary = "빌더 블럭 삭제", description = "사용자 id로 빌더 블럭 삭제")
-//    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
-//    @DeleteMapping("/builder/{id}")
-//    public ResponseEntity<?> delete(@Parameter(description = "사용자 아이디", required = true) @PathVariable String id) throws Exception {
-//        return builderService.delete(id);
-//    }
+    @Operation(summary = "빌더 블럭 삭제", description = "type,id로 빌더 블럭 삭제")
+    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
+    @PutMapping("/builder")
+    public ResponseEntity<?> delete(@RequestBody @Validated BuilderType param) throws Exception {
+        return builderService.delete(param);
+    }
 
 }
