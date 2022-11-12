@@ -1,7 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.builder.controller;
 
 import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
-import com.example.portfoliopagebuilder_bnd.builder.dto.BuilderType;
 import com.example.portfoliopagebuilder_bnd.builder.dto.DeleteInfo;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@Tag(name="builder", description = "builder-controller")
+@Tag(name = "builder", description = "builder-controller")
 @RequiredArgsConstructor
 public class BuilderController {
     private final BuilderService builderService;
@@ -46,6 +47,13 @@ public class BuilderController {
     @PutMapping("/builder")
     public ResponseEntity<?> delete(@RequestBody @Validated DeleteInfo param) throws Exception {
         return builderService.delete(param);
+    }
+
+    @Operation(summary = "포트폴리오 조회", description = "전체 포트폴리오 페이지별로 조회")
+    @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
+    @GetMapping("/builder/portfolio")
+    public ResponseEntity<?> portfolio(@PageableDefault Pageable page) throws Exception {
+        return builderService.getPortfolio(page);
     }
 
 }

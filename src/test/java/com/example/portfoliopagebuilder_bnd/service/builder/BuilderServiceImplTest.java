@@ -1,7 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
 import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
-import com.example.portfoliopagebuilder_bnd.builder.model.Profile;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderServiceImpl;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
@@ -13,15 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

@@ -1,6 +1,5 @@
-package com.example.portfoliopagebuilder_bnd.builder.model;
+package com.example.portfoliopagebuilder_bnd.builder.entity;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Term;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -15,8 +14,9 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-public class MarkDown implements Serializable {
+public class Profile implements Serializable {
     static final long serialVersionUID = 1L;
+
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -33,12 +33,51 @@ public class MarkDown implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
+    @Column(name = "image")
+    private String profileImage;
+
     @Column(name = "text1")
-    private String markdownText;
+    private String profileMainText;
+
+    @Column(name = "text2")
+    private String profileSubText;
+
+    @Column(name = "applyText1")
+    private String profileAdditionalInfo;
+
+    @Column(name = "applyText2")
+    private String profileApplyCompany;
+
+    @Column(name = "applyText3")
+    private String profileApplyPosition;
+
+    @Column(name = "phone")
+    private String profilePhoneNumber;
+
+    @Column(name = "email")
+    private String profileEmail;
+
+    @Column(name = "github")
+    private String profileGitHubURL;
+
+    @Column(name = "keyword1")
+    private String profileKeyword1;
+
+    @Column(name = "keyword2")
+    private String profileKeyword2;
+
+    @Column(name = "keyword3")
+    private String profileKeyword3;
+
+    @Column(name = "keyword4")
+    private String profileKeyword4;
+
+    @Column(name = "keyword5")
+    private String profileKeyword5;
 
     @CreationTimestamp
-    @Column(name= "write_date", nullable = false, updatable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
     @UpdateTimestamp

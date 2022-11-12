@@ -3,20 +3,25 @@ package com.example.portfoliopagebuilder_bnd.builder.service;
 import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.dto.BuilderType;
 import com.example.portfoliopagebuilder_bnd.builder.dto.DeleteInfo;
-import com.example.portfoliopagebuilder_bnd.builder.model.*;
+import com.example.portfoliopagebuilder_bnd.builder.dto.PortfolioInfo;
+import com.example.portfoliopagebuilder_bnd.builder.entity.*;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.login.repository.UserRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -49,7 +54,7 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Profile")) {
                     Profile profile = mapper.convertValue(builderItem.getFieldValues(), Profile.class);
                     profile.setUser(user);
-                    if(builderItem.getId() != null){
+                    if (builderItem.getId() != null) {
                         profile.setId(builderItem.getId());
                     }
                     profile.setIdx(builderItem.getIdx());
@@ -59,7 +64,7 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Project")) {
                     Project project = mapper.convertValue(builderItem.getFieldValues(), Project.class);
                     project.setUser(user);
-                    if(builderItem.getId() != null){
+                    if (builderItem.getId() != null) {
                         project.setId(builderItem.getId());
                     }
                     project.setIdx(builderItem.getIdx());
@@ -69,7 +74,7 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Career")) {
                     Career career = mapper.convertValue(builderItem.getFieldValues(), Career.class);
                     career.setUser(user);
-                    if(builderItem.getId() != null){
+                    if (builderItem.getId() != null) {
                         career.setId(builderItem.getId());
                     }
                     career.setIdx(builderItem.getIdx());
@@ -79,7 +84,7 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("Portfolio")) {
                     Portfolio portfolio = mapper.convertValue(builderItem.getFieldValues(), Portfolio.class);
                     portfolio.setUser(user);
-                    if(builderItem.getId() != null){
+                    if (builderItem.getId() != null) {
                         portfolio.setId(builderItem.getId());
                     }
                     portfolio.setIdx(builderItem.getIdx());
@@ -89,7 +94,7 @@ public class BuilderServiceImpl implements BuilderService {
                 if (builderItem.getBlockType().equals("MarkDown")) {
                     MarkDown markDown = mapper.convertValue(builderItem.getFieldValues(), MarkDown.class);
                     markDown.setUser(user);
-                    if(builderItem.getId() != null){
+                    if (builderItem.getId() != null) {
                         markDown.setId(builderItem.getId());
                     }
                     markDown.setIdx(builderItem.getIdx());
@@ -142,12 +147,22 @@ public class BuilderServiceImpl implements BuilderService {
             if (param.getBlockType().equals("MarkDown")) {
                 markDownRepository.deleteById(param.getId());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("delete error :: {}", e.getMessage());
             return new ResponseEntity("삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity("ok", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getPortfolio(Pageable page) {
+        BaseResponse<List<PortfolioInfo>> res = new BaseResponse<>();
+        log.info("설마 아이디 조회 안됨 ? ::: {}", portfolioRepository.findAll(page).getContent());
+        res.setBody(mapper.convertValue(portfolioRepository.findAll(page).getContent(),
+                new TypeReference<ArrayList<PortfolioInfo>>() {
+                }));
+        return new ResponseEntity(res, HttpStatus.OK);
     }
 
     @Override
@@ -178,7 +193,7 @@ public class BuilderServiceImpl implements BuilderService {
 
 
     private void makeBuilderType(Builder builder, List<?> builderDataList) throws NoSuchFieldException, IllegalAccessException {
-        if(builderDataList.size() == 0) {
+        if (builderDataList.size() == 0) {
             return;
         }
 

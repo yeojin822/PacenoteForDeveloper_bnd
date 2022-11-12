@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.builder.model;
+package com.example.portfoliopagebuilder_bnd.builder.entity;
 
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,7 +29,7 @@ public class Portfolio implements Serializable {
     public Long id;
 
     @Column(name = "idx")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
     @Column(name = "image1")
