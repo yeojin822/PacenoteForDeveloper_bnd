@@ -1,6 +1,5 @@
-package com.example.portfoliopagebuilder_bnd.builder.model;
+package com.example.portfoliopagebuilder_bnd.builder.entity;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Term;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-public class Career implements Serializable {
+public class MarkDown implements Serializable {
     static final long serialVersionUID = 1L;
 
     @ManyToOne
@@ -34,16 +33,7 @@ public class Career implements Serializable {
     public String idx;
 
     @Column(name = "text1")
-    private String careerMainText;
-
-    @Column(name = "text2")
-    private String careerSubText;
-
-    @Column(name = "text3")
-    private String careerDescription;
-
-    @Embedded
-    private Term careerTerm;
+    private String markdownText;
 
     @CreationTimestamp
     @Column(name= "write_date", nullable = false, updatable = false)

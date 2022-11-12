@@ -1,6 +1,8 @@
-package com.example.portfoliopagebuilder_bnd.builder.model;
+package com.example.portfoliopagebuilder_bnd.builder.entity;
 
+import com.example.portfoliopagebuilder_bnd.builder.dto.Term;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
+import com.example.portfoliopagebuilder_bnd.common.util.StringListConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,13 +12,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Profile implements Serializable {
+public class Project  implements Serializable {
     static final long serialVersionUID = 1L;
-
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -33,54 +35,32 @@ public class Profile implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
-    @Column(name = "image")
-    private String profileImage;
-
     @Column(name = "text1")
-    private String profileMainText;
+    private String projectName;
 
     @Column(name = "text2")
-    private String profileSubText;
+    private String projectOrganigation;
 
-    @Column(name = "applyText1")
-    private String profileAdditionalInfo;
+    @Column(name = "text3")
+    private String projectDescription;
 
-    @Column(name = "applyText2")
-    private String profileApplyCompany;
+    @Embedded
+    private Term projectTerm;
 
-    @Column(name = "applyText3")
-    private String profileApplyPosition;
+    @Column(name = "text4")
+    private String projectSkills;
 
-    @Column(name = "phone")
-    private String profilePhoneNumber;
-
-    @Column(name = "email")
-    private String profileEmail;
-
-    @Column(name = "github")
-    private String profileGitHubURL;
-
-    @Column(name = "keyword1")
-    private String profileKeyword1;
-
-    @Column(name = "keyword2")
-    private String profileKeyword2;
-
-    @Column(name = "keyword3")
-    private String profileKeyword3;
-
-    @Column(name = "keyword4")
-    private String profileKeyword4;
-
-    @Column(name = "keyword5")
-    private String profileKeyword5;
+    @Column(name = "text5", columnDefinition = "JSON")
+    @Convert(converter = StringListConverter.class)
+    private List<String> projectSkillSet;
 
     @CreationTimestamp
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name= "write_date", nullable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp writeDate;
 
     @UpdateTimestamp
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp modifyDate;
+
 }
