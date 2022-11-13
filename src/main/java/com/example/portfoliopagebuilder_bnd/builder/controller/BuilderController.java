@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,8 @@ public class BuilderController {
     @Operation(summary = "포트폴리오 조회", description = "전체 포트폴리오 페이지별로 조회")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     @GetMapping("/builder/portfolio")
-    public ResponseEntity<?> portfolio(@PageableDefault Pageable page) throws Exception {
-        return builderService.getPortfolio(page);
+    public ResponseEntity<?> portfolio(@Parameter(description = "페이지", required = true) @RequestParam int page, @Parameter(description = "페이지 사이즈", required = true) @RequestParam int size) throws Exception {
+        return builderService.getPortfolio(PageRequest.of(page,size));
     }
 
 }
