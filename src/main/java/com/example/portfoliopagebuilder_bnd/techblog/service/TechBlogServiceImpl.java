@@ -2,25 +2,23 @@ package com.example.portfoliopagebuilder_bnd.techblog.service;
 
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
 import com.example.portfoliopagebuilder_bnd.common.util.web.WebRequestUtil;
+import com.example.portfoliopagebuilder_bnd.techblog.model.dto.FavoriteDto;
 import com.example.portfoliopagebuilder_bnd.techblog.model.dto.TechBlogListDto;
 import com.example.portfoliopagebuilder_bnd.techblog.model.entity.TechFavorite;
 import com.example.portfoliopagebuilder_bnd.techblog.model.entity.TechOfficial;
 import com.example.portfoliopagebuilder_bnd.techblog.repository.TechFavoriteRepository;
 import com.example.portfoliopagebuilder_bnd.techblog.repository.TechOfficialRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -33,17 +31,23 @@ public class TechBlogServiceImpl implements TechBlogService {
     private final TechFavoriteRepository techFavoriteRepository;
 
     @Override
-    public boolean save(String userId, String officialId) throws Exception {
-        TechFavorite techFavorite = techFavoriteRepository.findById(userId).orElse(null);
+    public boolean save(FavoriteDto favoriteDto) throws Exception {
+        TechFavorite techFavorite = techFavoriteRepository.findById(favoriteDto.getUserId()).orElse(null);
 
         if (techFavorite == null) {
             techFavorite = new TechFavorite();
+            techFavorite.setUser_id(favoriteDto.getUserId());
+            techFavorite.setWriteDate(Timestamp.valueOf(LocalDateTime.now()));
         }
 
-        List<String> blogList = techFavorite.getBlogId();
+        Set<String> blogList = techFavorite.getBlogId();
 
-        blogList.add(officialId);
+        if(blogList == null){
+            blogList = new HashSet<>();
+        }
 
+        blogList.addAll(favoriteDto.getBlogIds());
+        techFavorite.setModifyDate(Timestamp.valueOf(LocalDateTime.now()));
         techFavorite.setBlogId(blogList);
 
         techFavoriteRepository.save(techFavorite);
@@ -102,13 +106,24 @@ public class TechBlogServiceImpl implements TechBlogService {
         BaseResponse<String> response = new BaseResponse();
         List<TechOfficial> officials = new ArrayList<>();
 
+        //아래 map을 officials에 저장해야함
         param.entrySet().stream().map(entry -> entry.getValue());
-
+        
         techOfficialRepository.saveAll(officials);
 
         response.setBody("complete insert");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public boolean saveClickCount(Long blogId) {
+        TechOfficial techOfficial = techOfficialRepository.findById(blogId).orElseThrow();
+        techOfficial.setClickCount(techOfficial.getClickCount()+1);
+
+        techOfficialRepository.save(techOfficial);
+
+        return true;
     }
 
     private List<TechOfficial> officialList() throws Exception {

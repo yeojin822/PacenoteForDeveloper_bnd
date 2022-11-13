@@ -1,6 +1,8 @@
 package com.example.portfoliopagebuilder_bnd.techblog.model.entity;
 
+import com.example.portfoliopagebuilder_bnd.common.util.StringListConverter;
 import com.example.portfoliopagebuilder_bnd.common.util.StringMapConverter;
+import com.example.portfoliopagebuilder_bnd.common.util.StringSetConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
@@ -10,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,8 +25,8 @@ public class TechFavorite implements Serializable {
     private String user_id;
 
     @Column(name = "blog_id",columnDefinition = "JSON")
-    @Convert(converter = StringMapConverter.class)
-    private List<String> blogId;
+    @Convert(converter = StringSetConverter.class)
+    private Set<String> blogId;
 
     @Column(name = "write_date")
     private Timestamp  writeDate;

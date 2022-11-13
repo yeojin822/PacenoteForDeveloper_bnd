@@ -32,6 +32,18 @@ public class TechOfficial implements Serializable {
 
     @Column(name = "link")
     private String link;
+
+    @Column(name = "thevc_link")
+    private String thevcLink;
+
+    @Column(name = "youtube_link")
+    private String youtubeLink;
+
+    @Column(name = "click_count")
+    private int clickCount;
+
+    @Column(name = "favorite_count")
+    private int favoriteCount;
     
     @Column(name = "update_date")
     private Timestamp updateDate;
