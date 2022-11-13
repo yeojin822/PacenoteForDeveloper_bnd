@@ -221,7 +221,7 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
     private void builderTypeSetting(Object builderData, BuilderType builderType, Class<?> builderClass) throws IllegalAccessException, NoSuchFieldException {
-        builderType.setBlockType(builderClass.getSimpleName());
+        builderType.setBlockType(builderClass.getSimpleName().replace("Dto",""));
         builderType.setId((Long) getBuilderDataField("id", builderData, builderClass));
         builderType.setIdx((String) getBuilderDataField("idx", builderData, builderClass));
         builderType.setFieldValues(mapper.convertValue(builderData, builderClass));
