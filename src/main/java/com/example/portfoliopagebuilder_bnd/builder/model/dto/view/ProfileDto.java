@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.builder.entity;
+package com.example.portfoliopagebuilder_bnd.builder.model.dto.view;
 
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,46 +11,51 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Entity
 @Data
 @NoArgsConstructor
-public class Portfolio implements Serializable {
+public class ProfileDto implements Serializable {
     static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long id;
 
-    @Column(name = "idx")
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
-    @Column(name = "image1")
-    private String portfolioThumbnail;
+    private String profileImage;
 
-    @Column(name = "text1")
-    private String portfolioName;
+    private String profileMainText;
 
-    @Column(name = "text2")
-    private String portfolioDescription;
+    private String profileSubText;
 
-    @Column(name = "link1")
-    private String portfolioURL;
+    private String profileAdditionalInfo;
 
-    @CreationTimestamp
+    private String profileApplyCompany;
+
+    private String profileApplyPosition;
+
+    private String profilePhoneNumber;
+
+    private String profileEmail;
+
+    private String profileGitHubURL;
+
+    private String profileKeyword1;
+
+    private String profileKeyword2;
+
+    private String profileKeyword3;
+
+    private String profileKeyword4;
+
+    private String profileKeyword5;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
-    @UpdateTimestamp
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp modifyDate;
-
 }

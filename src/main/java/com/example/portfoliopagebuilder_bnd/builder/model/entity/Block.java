@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.builder.entity;
+package com.example.portfoliopagebuilder_bnd.builder.model.entity;
 
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.example.portfoliopagebuilder_bnd.common.util.StringListConverter;

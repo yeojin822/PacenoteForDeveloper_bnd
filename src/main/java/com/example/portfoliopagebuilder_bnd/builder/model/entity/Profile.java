@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.builder.entity;
+package com.example.portfoliopagebuilder_bnd.builder.model.entity;
 
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,17 +20,14 @@ public class Profile implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long id;
 
     @Column(name = "idx")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
     @Column(name = "image")
@@ -76,11 +73,9 @@ public class Profile implements Serializable {
     private String profileKeyword5;
 
     @CreationTimestamp
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name= "write_date", nullable = false, updatable = false)
     private Timestamp writeDate;
 
     @UpdateTimestamp
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp modifyDate;
 }

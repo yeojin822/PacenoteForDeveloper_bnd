@@ -1,15 +1,15 @@
-package com.example.portfoliopagebuilder_bnd.builder.dto;
+package com.example.portfoliopagebuilder_bnd.builder.model.dto;
 
-import com.example.portfoliopagebuilder_bnd.login.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PortfolioInfo implements Serializable {
     static final long serialVersionUID = 1L;
     public Long id;
