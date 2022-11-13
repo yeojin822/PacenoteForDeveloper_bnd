@@ -1,7 +1,5 @@
 package com.example.portfoliopagebuilder_bnd.techblog.controller;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
-import com.example.portfoliopagebuilder_bnd.builder.service.BuilderService;
 import com.example.portfoliopagebuilder_bnd.techblog.service.TechBlogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,10 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.example.portfoliopagebuilder_bnd.builder.dto;
+package com.example.portfoliopagebuilder_bnd.builder.model.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

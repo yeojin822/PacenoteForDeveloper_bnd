@@ -1,10 +1,8 @@
-package com.example.portfoliopagebuilder_bnd.builder.dto;
+package com.example.portfoliopagebuilder_bnd.builder.model.dto;
 
-import com.example.portfoliopagebuilder_bnd.login.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.sql.Timestamp;
 

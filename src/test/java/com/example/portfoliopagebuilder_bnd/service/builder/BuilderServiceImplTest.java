@@ -1,6 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.service.builder;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
+import com.example.portfoliopagebuilder_bnd.builder.model.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderServiceImpl;
 import com.example.portfoliopagebuilder_bnd.login.model.User;

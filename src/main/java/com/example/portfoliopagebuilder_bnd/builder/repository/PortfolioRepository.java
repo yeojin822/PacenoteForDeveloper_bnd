@@ -1,6 +1,6 @@
 package com.example.portfoliopagebuilder_bnd.builder.repository;
 
-import com.example.portfoliopagebuilder_bnd.builder.entity.Portfolio;
+import com.example.portfoliopagebuilder_bnd.builder.model.entity.Portfolio;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

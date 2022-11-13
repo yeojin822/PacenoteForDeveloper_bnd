@@ -1,7 +1,7 @@
 package com.example.portfoliopagebuilder_bnd.builder.controller;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Builder;
-import com.example.portfoliopagebuilder_bnd.builder.dto.DeleteInfo;
+import com.example.portfoliopagebuilder_bnd.builder.model.dto.Builder;
+import com.example.portfoliopagebuilder_bnd.builder.model.dto.DeleteInfo;
 import com.example.portfoliopagebuilder_bnd.builder.service.BuilderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -45,7 +46,7 @@ public class BuilderController {
     @Operation(summary = "빌더 블럭 삭제", description = "type,id로 빌더 블럭 삭제")
     @Parameter(in = ParameterIn.HEADER, name = "sessionkey", description = "session key", required = true, schema = @Schema(type = "string", defaultValue = "ppbTestdev"))
     @PutMapping("/builder")
-    public ResponseEntity<?> delete(@RequestBody @Validated DeleteInfo param) throws Exception {
+    public ResponseEntity<?> delete(@RequestBody @Validated List<DeleteInfo> param) throws Exception {
         return builderService.delete(param);
     }
 
