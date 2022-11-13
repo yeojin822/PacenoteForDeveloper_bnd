@@ -1,6 +1,7 @@
-package com.example.portfoliopagebuilder_bnd.builder.entity;
+package com.example.portfoliopagebuilder_bnd.builder.model.dto.view;
 
-import com.example.portfoliopagebuilder_bnd.builder.dto.Term;
+import com.example.portfoliopagebuilder_bnd.builder.model.dto.Term;
+import com.example.portfoliopagebuilder_bnd.common.util.StringListConverter;
 import com.example.portfoliopagebuilder_bnd.login.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -11,46 +12,37 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
-public class Career implements Serializable {
+public class ProjectDto implements Serializable {
     static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long id;
 
-    @Column(name = "idx")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String idx;
 
-    @Column(name = "text1")
-    private String careerMainText;
+    private String projectName;
 
-    @Column(name = "text2")
-    private String careerSubText;
+    private String projectOrganigation;
 
-    @Column(name = "text3")
-    private String careerDescription;
+    private String projectDescription;
 
-    @Embedded
-    private Term careerTerm;
+    private Term projectTerm;
 
-    @CreationTimestamp
-    @Column(name= "write_date", nullable = false, updatable = false)
+    private String projectSkills;
+
+    private List<String> projectSkillSet;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp writeDate;
 
-    @UpdateTimestamp
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Timestamp modifyDate;
 }

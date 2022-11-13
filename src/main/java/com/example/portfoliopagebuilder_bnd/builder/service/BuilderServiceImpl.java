@@ -4,6 +4,7 @@ import com.example.portfoliopagebuilder_bnd.builder.model.dto.Builder;
 import com.example.portfoliopagebuilder_bnd.builder.model.dto.BuilderType;
 import com.example.portfoliopagebuilder_bnd.builder.model.dto.DeleteInfo;
 import com.example.portfoliopagebuilder_bnd.builder.model.dto.PortfolioInfo;
+import com.example.portfoliopagebuilder_bnd.builder.model.dto.view.*;
 import com.example.portfoliopagebuilder_bnd.builder.model.entity.*;
 import com.example.portfoliopagebuilder_bnd.builder.repository.*;
 import com.example.portfoliopagebuilder_bnd.common.BaseResponse;
@@ -179,11 +180,16 @@ public class BuilderServiceImpl implements BuilderService {
         Builder builder = new Builder();
         builder.setId(id);
 
-        makeBuilderType(builder, profileRepository.findAllByUserId_Id(id));
-        makeBuilderType(builder, careerRepository.findAllByUserId_Id(id));
-        makeBuilderType(builder, projectRepository.findAllByUserId_Id(id));
-        makeBuilderType(builder, portfolioRepository.findAllByUserId_Id(id));
-        makeBuilderType(builder, markDownRepository.findAllByUserId_Id(id));
+        makeBuilderType(builder, mapper.convertValue(profileRepository.findAllByUserId_Id(id), new TypeReference<ArrayList<ProfileDto>>() {
+        }));
+        makeBuilderType(builder, mapper.convertValue(careerRepository.findAllByUserId_Id(id), new TypeReference<ArrayList<CareerDto>>() {
+        }));
+        makeBuilderType(builder, mapper.convertValue(projectRepository.findAllByUserId_Id(id), new TypeReference<ArrayList<ProjectDto>>() {
+        }));
+        makeBuilderType(builder, mapper.convertValue(portfolioRepository.findAllByUserId_Id(id), new TypeReference<ArrayList<PortfolioDto>>() {
+        }));
+        makeBuilderType(builder, mapper.convertValue(markDownRepository.findAllByUserId_Id(id), new TypeReference<ArrayList<MarkDownDto>>() {
+        }));
 
         Block block = blockRepository.findByUserId_Id(id);
         if (block != null) {
